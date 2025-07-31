@@ -28,71 +28,57 @@ import {
 export default function Home() {
   const [latestNews, setLatestNews] = useState<News[]>([])
   const [isLoadingNews, setIsLoadingNews] = useState(true)
-  const [newsError, setNewsError] = useState<string | null>(null)
+  const [currentSlide, setCurrentSlide] = useState(0)
   const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([])
   const [isLoadingEvents, setIsLoadingEvents] = useState(true)
-  const [eventsError, setEventsError] = useState<string | null>(null)
-  const [isClient, setIsClient] = useState(false)
 
-  // Ensure component is mounted on client
   useEffect(() => {
-    setIsClient(true)
+    loadData()
   }, [])
-
-  useEffect(() => {
-    if (isClient) {
-      loadData()
-    }
-  }, [isClient])
 
   const loadData = async () => {
     try {
-      // Reset states
       setIsLoadingNews(true)
       setIsLoadingEvents(true)
-      setNewsError(null)
-      setEventsError(null)
 
-      // Load news data
-      try {
-        const newsData = await newsService.getPublished()
-        setLatestNews(newsData || [])
-      } catch (error) {
-        console.error("Error loading news:", error)
-        setNewsError("Failed to load news")
-        setLatestNews([])
-      } finally {
-        setIsLoadingNews(false)
-      }
+      const [newsData, eventsData] = await Promise.all([newsService.getPublished(), eventsService.getUpcoming()])
 
-      // Load events data
-      try {
-        const eventsData = await eventsService.getUpcoming()
-        setUpcomingEvents(eventsData || [])
-      } catch (error) {
-        console.error("Error loading events:", error)
-        setEventsError("Failed to load events")
-        setUpcomingEvents([])
-      } finally {
-        setIsLoadingEvents(false)
-      }
+      // Get all news articles for the carousel
+      setLatestNews(newsData)
+      // Get all upcoming events
+      setUpcomingEvents(eventsData)
     } catch (error) {
-      console.error("Error in loadData:", error)
+      console.error("Error loading data:", error)
+    } finally {
       setIsLoadingNews(false)
       setIsLoadingEvents(false)
     }
   }
 
-  // Don't render until client-side hydration is complete
-  if (!isClient) {
-    return (
-      <div className="flex flex-col min-h-screen bg-[#f8f4ef]">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A67C52]"></div>
-        </div>
-      </div>
-    )
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
   }
+
+  const formatEventDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    })
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCurrentSlide(0)
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   return (
     <AnimatedWrapper className="flex flex-col min-h-screen bg-[#f8f4ef]">
@@ -539,19 +525,6 @@ export default function Home() {
                 />
                 <p className="text-gray-600">Loading upcoming events...</p>
               </motion.div>
-            ) : eventsError ? (
-              <motion.div
-                className="text-center py-12"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <p className="text-red-500 text-lg mb-4">Error loading events</p>
-                <Button onClick={loadData} variant="outline" className="text-[#A67C52] border-[#A67C52] bg-transparent">
-                  Try Again
-                </Button>
-              </motion.div>
             ) : upcomingEvents.length === 0 ? (
               <motion.div
                 className="text-center py-12"
@@ -645,30 +618,6 @@ export default function Home() {
                 />
                 <p className="text-gray-600 text-lg">Loading latest news...</p>
               </motion.div>
-            ) : newsError ? (
-              <motion.div
-                className="text-center py-12"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <p className="text-red-500 text-lg mb-4">Error loading news</p>
-                <Button onClick={loadData} variant="outline" className="text-[#A67C52] border-[#A67C52] bg-transparent">
-                  Try Again
-                </Button>
-              </motion.div>
-            ) : latestNews.length === 0 ? (
-              <motion.div
-                className="text-center py-12"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <p className="text-gray-500 text-lg mb-4">No news articles available at the moment.</p>
-                <p className="text-gray-400">Check back soon for updates!</p>
-              </motion.div>
             ) : (
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -676,7 +625,8 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <NewsCarousel news={latestNews} />
+                <EventsCarousel events={latestNews} />
+               
               </motion.div>
             )}
 

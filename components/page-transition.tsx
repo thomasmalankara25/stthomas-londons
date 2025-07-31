@@ -13,16 +13,12 @@ export function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname()
 
   useEffect(() => {
-    // Smooth scroll to top on route change with a small delay
-    const timer = setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "smooth",
-      })
-    }, 100)
-
-    return () => clearTimeout(timer)
+    // Smooth scroll to top on route change
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    })
   }, [pathname])
 
   return (
