@@ -4,19 +4,18 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { MobileMenu } from "@/components/mobile-menu"
 import { EventsCarousel } from "@/components/events-carousel"
 import { NewsCarousel } from "@/components/news-carousel"
 import { newsService } from "@/lib/api/news"
 import type { News } from "@/lib/supabase"
 import { eventsService } from "@/lib/api/events"
 import type { Event } from "@/lib/supabase"
+import { formatDateForDisplay } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { AnimatedWrapper } from "@/components/animated-wrapper"
 import { AnimatedSection } from "@/components/animated-section"
 import { AnimatedGrid } from "@/components/animated-grid"
 import {
-  headerVariants,
   heroImageVariants,
   slideInLeftVariants,
   slideInRightVariants,
@@ -56,19 +55,11 @@ export default function Home() {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
+    return formatDateForDisplay(dateString)
   }
 
   const formatEventDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    })
+    return formatDateForDisplay(dateString)
   }
 
   useEffect(() => {
@@ -82,100 +73,6 @@ export default function Home() {
 
   return (
     <AnimatedWrapper className="flex flex-col min-h-screen bg-[#f8f4ef]">
-      {/* Header */}
-      <motion.header
-        className="bg-white shadow-sm sticky top-0 z-50"
-        variants={headerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Link href="/" className="flex items-center gap-3">
-              <div className="flex items-center gap-3">
-                <motion.div className="flex-shrink-0" whileHover={{ rotate: 360 }} transition={{ duration: 0.8 }}>
-                  <Image
-                    src="/images/malankara-logo.png"
-                    alt="Malankara Catholic Church Logo"
-                    width={40}
-                    height={40}
-                    className="object-contain"
-                  />
-                </motion.div>
-                <div className="flex flex-col">
-                  <motion.div
-                    className="text-lg font-bold text-[#8B6F47] tracking-wider"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.3 }}
-                  >
-                    St. Thomas Malankara
-                  </motion.div>
-                  <motion.div
-                    className="text-xs text-[#8B6F47] tracking-[0.2em] font-medium"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.4 }}
-                  >
-                    CATHOLIC CHURCH
-                  </motion.div>
-                </div>
-              </div>
-            </Link>
-          </motion.div>
-
-          {/* Desktop Navigation */}
-          <motion.nav
-            className="hidden md:flex items-center gap-8"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3, staggerChildren: 0.1 }}
-          >
-            {[
-              { href: "/", label: "HOME", active: true },
-              { href: "/about", label: "ABOUT US" },
-              { href: "/community", label: "COMMUNITY" },
-              { href: "/events", label: "EVENTS" },
-              { href: "/news", label: "NEWS" },
-            ].map((item, index) => (
-              <motion.div
-                key={item.href}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
-              >
-                <Link
-                  href={item.href}
-                  className={`text-sm font-medium tracking-wide transition-colors duration-200 hover:text-[#8B6F47] ${
-                    item.active ? "text-[#8B6F47]" : "text-gray-700"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              </motion.div>
-            ))}
-          </motion.nav>
-
-          {/* Mobile Menu Button */}
-          <motion.div
-            className="flex items-center gap-4"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
-              <Button className="bg-[#A67C52] hover:bg-[#8B6F47] text-white px-4 md:px-6 py-2 text-sm font-medium tracking-wide rounded-sm hidden md:block">
-                DONATE FUND
-              </Button>
-            </motion.div>
-            <MobileMenu />
-          </motion.div>
-        </div>
-      </motion.header>
 
       <main>
         {/* Hero Section */}

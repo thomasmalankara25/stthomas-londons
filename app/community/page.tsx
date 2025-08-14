@@ -7,55 +7,7 @@ export default function Community() {
   return (
     <div className="flex flex-col min-h-screen bg-[#f8f4ef]">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex-shrink-0">
-                <Image
-                  src="/images/malankara-logo.png"
-                  alt="Malankara Catholic Church Logo"
-                  width={40}
-                  height={40}
-                  className="object-contain"
-                />
-              </div>
-              <div className="flex flex-col">
-                <div className="text-lg font-bold text-[#8B6F47] tracking-wider">St. Thomas Malankara</div>
-                <div className="text-xs text-[#8B6F47] tracking-[0.2em] font-medium">CATHOLIC CHURCH</div>
-              </div>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              HOME
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              ABOUT US
-            </Link>
-            <Link href="/community" className="text-[#8B6F47] text-sm font-medium tracking-wide">
-              COMMUNITY
-            </Link>
-            <Link href="/events" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              EVENTS
-            </Link>
-            <Link href="/news" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              NEWS
-            </Link>
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-4">
-            <Button className="bg-[#A67C52] hover:bg-[#8B6F47] text-white px-4 md:px-6 py-2 text-sm font-medium tracking-wide rounded-sm hidden md:block">
-              DONATE FUND
-            </Button>
-            {/* Mobile Menu */}
-            <MobileMenu />
-          </div>
-        </div>
-      </header>
+    
 
       <main>
         {/* Hero Section */}

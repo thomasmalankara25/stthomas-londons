@@ -1,5 +1,6 @@
 import { supabase } from "../supabase"
 import type { Event, EventRegistration } from "../supabase"
+import { formatDateToLocal, normalizeDateForDatabase } from "../utils"
 
 export interface CreateEventData {
   title: string
@@ -43,7 +44,7 @@ export class EventsService {
       .from("events")
       .select("*")
       .eq("status", "upcoming")
-      .order("date", { ascending: true })
+      .order("created_at", { ascending: false })
 
     if (error) {
       console.error("Error fetching upcoming events:", error)
@@ -67,6 +68,7 @@ export class EventsService {
   async create(eventData: CreateEventData): Promise<Event> {
     const dataToInsert = {
       ...eventData,
+      date: normalizeDateForDatabase(eventData.date),
       updated_at: new Date().toISOString(),
     }
 
@@ -85,6 +87,7 @@ export class EventsService {
 
     const finalData = {
       ...dataToUpdate,
+      date: dataToUpdate.date ? normalizeDateForDatabase(dataToUpdate.date) : undefined,
       updated_at: new Date().toISOString(),
     }
 
@@ -163,7 +166,7 @@ export class EventsService {
       .select("*")
       .eq("category", category)
       .eq("status", "upcoming")
-      .order("date", { ascending: true })
+      .order("created_at", { ascending: false })
 
     if (error) {
       console.error("Error fetching events by category:", error)

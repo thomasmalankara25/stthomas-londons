@@ -14,6 +14,8 @@ import { Switch } from "@/components/ui/switch"
 import { AdminAuthGuard } from "@/components/admin-auth-guard"
 import { eventsService } from "@/lib/api/events"
 import type { FormField } from "@/lib/supabase"
+import { uploadFileToS3 } from "@/lib/s3-upload"
+import { formatDateToLocal } from "@/lib/utils"
 
 const eventCategories = [
   "Celebration",
@@ -70,6 +72,7 @@ export default function EditEvent({ params }: { params: { id: string } }) {
   })
 
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [hasRegistrationForm, setHasRegistrationForm] = useState(false)
   const [formFields, setFormFields] = useState<FormField[]>(defaultFormFields)
   const [customFields, setCustomFields] = useState<FormField[]>([])
@@ -90,7 +93,7 @@ export default function EditEvent({ params }: { params: { id: string } }) {
         setFormData({
           title: eventData.title,
           description: eventData.description,
-          date: eventData.date,
+          date: formatDateToLocal(eventData.date),
           time: eventData.time,
           location: eventData.location,
           category: eventData.category,
@@ -136,14 +139,11 @@ export default function EditEvent({ params }: { params: { id: string } }) {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      setSelectedFile(file)
       const reader = new FileReader()
       reader.onload = (e) => {
         const result = e.target?.result as string
         setImagePreview(result)
-        setFormData((prev) => ({
-          ...prev,
-          image_url: result, // In production, you'd upload to Supabase Storage
-        }))
       }
       reader.readAsDataURL(file)
     }
@@ -155,6 +155,7 @@ export default function EditEvent({ params }: { params: { id: string } }) {
       image_url: "",
     }))
     setImagePreview(null)
+    setSelectedFile(null)
   }
 
   const addCustomField = () => {
@@ -187,9 +188,29 @@ export default function EditEvent({ params }: { params: { id: string } }) {
     setIsSubmitting(true)
 
     try {
+      let imageUrl = formData.image_url
+
+      // If a new image is selected, upload it to S3 first
+      if (selectedFile) {
+        try {
+          const uploadResult = await uploadFileToS3(selectedFile)
+          if (uploadResult.success && uploadResult.s3Url) {
+            imageUrl = uploadResult.s3Url
+          } else {
+            throw new Error(uploadResult.error || 'Failed to upload image')
+          }
+        } catch (uploadError) {
+          console.error("Error uploading image:", uploadError)
+          alert("Failed to upload image. Please try again.")
+          setIsSubmitting(false)
+          return
+        }
+      }
+
       const finalData = {
         id: Number.parseInt(params.id),
         ...formData,
+        image_url: imageUrl,
         status,
         registration_form: hasRegistrationForm
           ? {
@@ -563,11 +584,14 @@ export default function EditEvent({ params }: { params: { id: string } }) {
                         className="hidden"
                         id="image-upload"
                       />
-                      <label htmlFor="image-upload">
-                        <Button type="button" variant="outline" className="cursor-pointer bg-transparent">
-                          Choose File
-                        </Button>
-                      </label>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        className="cursor-pointer bg-transparent"
+                        onClick={() => document.getElementById('image-upload')?.click()}
+                      >
+                        Choose File
+                      </Button>
                     </div>
                   )}
                 </CardContent>

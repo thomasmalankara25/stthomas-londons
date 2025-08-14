@@ -126,49 +126,7 @@ export default function NewsArticle({ params }: { params: { id: string } }) {
   return (
     <div className="min-h-screen bg-[#f8f4ef]">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4 md:px-6">
-          <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="/images/malankara-logo.png"
-              alt="Malankara Catholic Church logo"
-              width={40}
-              height={40}
-              className="object-contain"
-            />
-            <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-wider text-[#8B6F47]">St. Thomas Malankara</span>
-              <span className="text-xs font-medium tracking-[0.2em] text-[#8B6F47]">CATHOLIC CHURCH</span>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-8 md:flex">
-            <Link href="/" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              HOME
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              ABOUT US
-            </Link>
-            <Link href="/community" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              COMMUNITY
-            </Link>
-            <Link href="/events" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              EVENTS
-            </Link>
-            <Link href="/news" className="text-[#8B6F47] text-sm font-medium tracking-wide">
-              NEWS
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <Button className="hidden rounded-sm bg-[#A67C52] px-4 py-2 text-sm font-medium tracking-wide text-white hover:bg-[#8B6F47] md:block md:px-6">
-              DONATE FUND
-            </Button>
-            <MobileMenu />
-          </div>
-        </div>
-      </header>
+      
 
       <main>
         {/* Breadcrumb */}
@@ -370,57 +328,30 @@ export default function NewsArticle({ params }: { params: { id: string } }) {
               />
             </video>
           </div>
-
           <div className="container relative z-10">
-            <h2 className="text-2xl md:text-4xl font-semibold text-white mb-6">Stay Updated with Church News</h2>
-            <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-              Don't miss out on the latest updates and stories from our church community.
+            <h2 className="mb-6 text-2xl font-semibold text-white md:text-4xl">Join Our Community</h2>
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-300">
+              Be part of our growing church family and experience the joy of fellowship, spiritual growth, and service.
             </p>
             <div className="flex justify-center gap-4">
-              <Link href="/news">
+              <Link href="/register">
                 <Button className="bg-[#A67C52] hover:bg-[#8B6F47] text-white px-6 py-2.5 text-sm font-medium tracking-wide rounded-sm">
-                  VIEW ALL NEWS
+                  REGISTER NOW
                 </Button>
               </Link>
-              <Link href="/">
-                <Button
-                  variant="outline"
-                  className="border-white text-white hover:bg-white/20 px-6 py-2.5 text-sm font-medium tracking-wide rounded-sm"
-                >
-                  BACK TO HOME
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                className="text-[#a67c52] border-white hover:bg-white/20 px-6 py-2.5 text-sm font-medium tracking-wide rounded-sm bg-transparent"
+              >
+                DONATE FUND
+              </Button>
             </div>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white pt-16 pb-6">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Stay Connected</h3>
-              <p className="mb-6 text-gray-300">
-                Connect with our church for all updates and information. Follow us on social media and subscribe to our
-                newsletter.
-              </p>
-              <div className="flex gap-4">
-                {["Facebook", "Instagram", "Twitter"].map((label) => (
-                  <Link
-                    key={label}
-                    href="#"
-                    aria-label={label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c49a6c] hover:bg-[#b38a5c]"
-                  >
-                    <span className="sr-only">{label}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+    
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { MobileMenu } from "@/components/mobile-menu"
 import { newsService } from "@/lib/api/news"
 import type { News } from "@/lib/supabase"
+import { formatDateForDisplay } from "@/lib/utils"
 
 const categories = [
   "All",
@@ -69,59 +70,13 @@ export default function NewsPage() {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
+    return formatDateForDisplay(dateString)
   }
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f8f4ef]">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4 md:px-6">
-          <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="/images/malankara-logo.png"
-              alt="Malankara Catholic Church logo"
-              width={40}
-              height={40}
-              className="object-contain"
-            />
-            <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-wider text-[#8B6F47]">St. Thomas Malankara</span>
-              <span className="text-xs font-medium tracking-[0.2em] text-[#8B6F47]">CATHOLIC CHURCH</span>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-8 md:flex">
-            <Link href="/" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              HOME
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              ABOUT US
-            </Link>
-            <Link href="/community" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              COMMUNITY
-            </Link>
-            <Link href="/events" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              EVENTS
-            </Link>
-            <Link href="/news" className="text-[#8B6F47] text-sm font-medium tracking-wide">
-              NEWS
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <Button className="hidden rounded-sm bg-[#A67C52] px-4 py-2 text-sm font-medium tracking-wide text-white hover:bg-[#8B6F47] md:block md:px-6">
-              DONATE FUND
-            </Button>
-            <MobileMenu />
-          </div>
-        </div>
-      </header>
+    
 
       <main>
         {/* Hero Section */}

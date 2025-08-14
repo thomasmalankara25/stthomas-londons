@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { AdminAuthGuard } from "@/components/admin-auth-guard"
 import { newsService } from "@/lib/api/news"
+import { uploadFileToS3 } from "@/lib/s3-upload"
 
 const categories = [
   "Church Development",
@@ -35,6 +36,7 @@ export default function EditNews({ params }: { params: { id: string } }) {
   })
 
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
@@ -83,14 +85,11 @@ export default function EditNews({ params }: { params: { id: string } }) {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      setSelectedFile(file)
       const reader = new FileReader()
       reader.onload = (e) => {
         const result = e.target?.result as string
         setImagePreview(result)
-        setFormData((prev) => ({
-          ...prev,
-          image_url: result, // In production, you'd upload to Supabase Storage
-        }))
       }
       reader.readAsDataURL(file)
     }
@@ -102,6 +101,7 @@ export default function EditNews({ params }: { params: { id: string } }) {
       image_url: "",
     }))
     setImagePreview(null)
+    setSelectedFile(null)
   }
 
   const handleSubmit = async (e: React.FormEvent, status: "draft" | "published") => {
@@ -109,9 +109,29 @@ export default function EditNews({ params }: { params: { id: string } }) {
     setIsSubmitting(true)
 
     try {
+      let imageUrl = formData.image_url
+
+      // If a new image is selected, upload it to S3 first
+      if (selectedFile) {
+        try {
+          const uploadResult = await uploadFileToS3(selectedFile)
+          if (uploadResult.success && uploadResult.s3Url) {
+            imageUrl = uploadResult.s3Url
+          } else {
+            throw new Error(uploadResult.error || 'Failed to upload image')
+          }
+        } catch (uploadError) {
+          console.error("Error uploading image:", uploadError)
+          alert("Failed to upload image. Please try again.")
+          setIsSubmitting(false)
+          return
+        }
+      }
+
       const finalData = {
         id: Number.parseInt(params.id),
         ...formData,
+        image_url: imageUrl,
         status,
       }
 

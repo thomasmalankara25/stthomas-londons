@@ -1,9 +1,8 @@
 import { createClient } from "@supabase/supabase-js"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const supabaseUrl = "https://bnnyldxlkpqxefvysagh.supabase.co"
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJubnlsZHhsa3BxeGVmdnlzYWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MzA0MDksImV4cCI6MjA2NjAwNjQwOX0.iBisOaUAq_v6zJT5TtmRCyvFb65CWB5UQwV4Os9dDso"
+export const supabase = createClient(supabaseUrl!, supabaseAnonKey!)
 
 // Types
 export interface User {
@@ -20,8 +19,13 @@ export interface News {
   title: string
   content: string
   excerpt: string
+  description?: string
   image_url?: string
+  category?: string
+  author?: string
   published: boolean
+  status?: string
+  published_at?: string
   created_at: string
   updated_at: string
   created_by: number
@@ -32,14 +36,23 @@ export interface Event {
   title: string
   description: string
   event_date: string
+  date?: string
+  time?: string
   location: string
   image_url?: string
-  registration_required: boolean
+  category?: string
+  attendees?: string
+  status?: "draft" | "upcoming"
+  registration_required?: boolean
   max_participants?: number
-  published: boolean
+  published?: boolean
+  registration_form?: {
+    enabled: boolean
+    fields?: any[]
+  }
   created_at: string
   updated_at: string
-  created_by: number
+  created_by?: number
 }
 
 export interface EventRegistration {
@@ -57,6 +70,14 @@ export interface AdditionalMember {
   dateOfBirth: string
   dateOfBaptism: string
   dateOfConfirmation: string
+}
+
+export interface FormField {
+  id: string
+  type: "text" | "email" | "tel" | "number"
+  label: string
+  required: boolean
+  placeholder: string
 }
 
 export interface MembershipRegistration {

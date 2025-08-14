@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { MobileMenu } from "@/components/mobile-menu"
 import { eventsService } from "@/lib/api/events"
 import type { Event } from "@/lib/supabase"
+import { formatDateForDisplay } from "@/lib/utils"
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([])
@@ -32,59 +33,13 @@ export default function EventsPage() {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
+    return formatDateForDisplay(dateString)
   }
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f8f4ef]">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4 md:px-6">
-          <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="/images/malankara-logo.png"
-              alt="Malankara Catholic Church logo"
-              width={40}
-              height={40}
-              className="object-contain"
-            />
-            <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-wider text-[#8B6F47]">St. Thomas Malankara</span>
-              <span className="text-xs font-medium tracking-[0.2em] text-[#8B6F47]">CATHOLIC CHURCH</span>
-            </div>
-          </Link>
-
-          {/* Desktop nav */}
-          <nav className="hidden items-center gap-8 md:flex">
-            <Link href="/" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              HOME
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              ABOUT US
-            </Link>
-            <Link href="/community" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              COMMUNITY
-            </Link>
-            <Link href="/events" className="text-[#8B6F47] text-sm font-medium tracking-wide">
-              EVENTS
-            </Link>
-            <Link href="/news" className="text-gray-700 hover:text-[#8B6F47] text-sm font-medium tracking-wide">
-              NEWS
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <Button className="hidden rounded-sm bg-[#A67C52] px-4 py-2 text-sm font-medium tracking-wide text-white hover:bg-[#8B6F47] md:block md:px-6">
-              DONATE FUND
-            </Button>
-            <MobileMenu />
-          </div>
-        </div>
-      </header>
+    
 
       <main>
         {/* Hero */}
@@ -176,7 +131,7 @@ export default function EventsPage() {
                       <div className="mb-4 space-y-2 text-gray-600">
                         <div className="flex items-center gap-2">
                           <Calendar className="h-4 w-4 text-[#A67C52]" />
-                          <span className="text-sm">{formatDate(event.date)}</span>
+                          <span className="text-sm">{formatDate(event.date || event.event_date)}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4 text-[#A67C52]" />
