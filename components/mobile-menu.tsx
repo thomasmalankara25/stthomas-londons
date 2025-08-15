@@ -74,7 +74,7 @@ export function MobileMenu() {
 
             {/* Menu Panel */}
             <motion.div
-              className="fixed right-0 top-0 h-[100vh] w-[80%] max-w-sm bg-white shadow-xl p-6 z-50"
+              className="fixed right-0 top-0 w-[80%] max-w-sm bg-white shadow-xl p-6 z-50" style={{ height: "100vh" }}  
               variants={mobileMenuVariants}
               initial="closed"
               animate="open"
