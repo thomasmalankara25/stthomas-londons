@@ -522,7 +522,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <EventsCarousel events={latestNews} />
+                <NewsCarousel news={latestNews} />
                
               </motion.div>
             )}
