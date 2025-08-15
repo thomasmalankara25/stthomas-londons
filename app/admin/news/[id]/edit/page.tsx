@@ -40,6 +40,7 @@ export default function EditNews({ params }: { params: { id: string } }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
+  const [uploadProgress, setUploadProgress] = useState<string>("")
   const router = useRouter()
 
   useEffect(() => {
@@ -52,12 +53,12 @@ export default function EditNews({ params }: { params: { id: string } }) {
       const newsData = await newsService.getById(Number.parseInt(params.id))
       if (newsData) {
         setFormData({
-          title: newsData.title,
-          description: newsData.description,
-          content: newsData.content,
-          category: newsData.category,
-          author: newsData.author,
-          status: newsData.status,
+          title: newsData.title || "",
+          description: newsData.description || "",
+          content: newsData.content || "",
+          category: newsData.category || "",
+          author: newsData.author || "",
+          status: (newsData.status as "draft" | "published") || "draft",
           image_url: newsData.image_url || "",
         })
         if (newsData.image_url) {
@@ -85,7 +86,21 @@ export default function EditNews({ params }: { params: { id: string } }) {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file')
+        return
+      }
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image file size must be less than 5MB')
+        return
+      }
+
       setSelectedFile(file)
+      
+      // Create preview
       const reader = new FileReader()
       reader.onload = (e) => {
         const result = e.target?.result as string
@@ -96,36 +111,36 @@ export default function EditNews({ params }: { params: { id: string } }) {
   }
 
   const removeImage = () => {
+    setSelectedFile(null)
+    setImagePreview(null)
     setFormData((prev) => ({
       ...prev,
       image_url: "",
     }))
-    setImagePreview(null)
-    setSelectedFile(null)
   }
 
   const handleSubmit = async (e: React.FormEvent, status: "draft" | "published") => {
     e.preventDefault()
     setIsSubmitting(true)
+    setUploadProgress("")
 
     try {
       let imageUrl = formData.image_url
 
-      // If a new image is selected, upload it to S3 first
+      // Upload image if a new file is selected
       if (selectedFile) {
-        try {
-          const uploadResult = await uploadFileToS3(selectedFile)
-          if (uploadResult.success && uploadResult.s3Url) {
-            imageUrl = uploadResult.s3Url
-          } else {
-            throw new Error(uploadResult.error || 'Failed to upload image')
-          }
-        } catch (uploadError) {
-          console.error("Error uploading image:", uploadError)
-          alert("Failed to upload image. Please try again.")
-          setIsSubmitting(false)
-          return
+        setUploadProgress("Uploading image...")
+        const uploadResult = await uploadFileToS3(selectedFile)
+        
+        if (!uploadResult.success) {
+          throw new Error(`Image upload failed: ${uploadResult.error}`)
         }
+        
+        imageUrl = uploadResult.s3Url || ""
+        setUploadProgress("Image uploaded successfully!")
+      } else if (!imagePreview && formData.image_url) {
+        // If no new file and no preview but we had an existing image, clear it
+        imageUrl = ""
       }
 
       const finalData = {
@@ -140,9 +155,10 @@ export default function EditNews({ params }: { params: { id: string } }) {
       router.push("/admin")
     } catch (error) {
       console.error("Error updating news:", error)
-      alert("Failed to update news article. Please try again.")
+      alert(`Failed to update news article: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsSubmitting(false)
+      setUploadProgress("")
     }
   }
 
@@ -263,28 +279,36 @@ export default function EditNews({ params }: { params: { id: string } }) {
               <Card>
                 <CardHeader>
                   <CardTitle>Featured Image</CardTitle>
-                  <CardDescription>Upload an image for your news article</CardDescription>
+                  <CardDescription>Upload an image for your news article (Max 5MB, JPG, PNG, GIF)</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {imagePreview ? (
-                    <div className="relative">
-                      <div className="relative w-full h-64 rounded-lg overflow-hidden">
-                        <Image src={imagePreview || "/placeholder.svg"} alt="Preview" fill className="object-cover" />
+                    <div className="space-y-4">
+                      <div className="relative">
+                        <div className="relative w-full h-64 rounded-lg overflow-hidden">
+                          <Image src={imagePreview || "/placeholder.svg"} alt="Preview" fill className="object-cover" />
+                        </div>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="absolute top-2 right-2"
+                          onClick={removeImage}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
                       </div>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-2 right-2"
-                        onClick={removeImage}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
+                      <div className="text-sm text-gray-600">
+                        <p><strong>File:</strong> {selectedFile?.name}</p>
+                        <p><strong>Size:</strong> {selectedFile ? (selectedFile.size / 1024 / 1024).toFixed(2) : '0'} MB</p>
+                        <p><strong>Type:</strong> {selectedFile?.type}</p>
+                      </div>
                     </div>
                   ) : (
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                       <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                       <p className="text-gray-600 mb-4">Click to upload an image</p>
+                      <p className="text-sm text-gray-500 mb-4">Supports JPG, PNG, GIF up to 5MB</p>
                       <input
                         type="file"
                         accept="image/*"
@@ -292,11 +316,18 @@ export default function EditNews({ params }: { params: { id: string } }) {
                         className="hidden"
                         id="image-upload"
                       />
-                      <label htmlFor="image-upload">
-                        <Button type="button" variant="outline" className="cursor-pointer bg-transparent">
-                          Choose File
-                        </Button>
+                      <label 
+                        htmlFor="image-upload" 
+                        className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#A67C52] cursor-pointer transition-colors"
+                      >
+                        Choose File
                       </label>
+                    </div>
+                  )}
+                  
+                  {uploadProgress && (
+                    <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                      <p className="text-sm text-blue-700">{uploadProgress}</p>
                     </div>
                   )}
                 </CardContent>
@@ -381,6 +412,11 @@ export default function EditNews({ params }: { params: { id: string } }) {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
+                    {imagePreview && (
+                      <div className="relative w-full h-32 rounded-md overflow-hidden">
+                        <Image src={imagePreview} alt="Preview" fill className="object-cover" />
+                      </div>
+                    )}
                     <div className="text-sm font-medium text-gray-800">{formData.title || "Article Title"}</div>
                     <div className="text-xs text-gray-500">
                       {formData.author && `By ${formData.author} • `}
