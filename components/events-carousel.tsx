@@ -115,7 +115,7 @@ export function EventsCarousel({ events }: EventsCarouselProps) {
                 <div className="p-6">
                   <div className="flex items-center gap-2 text-gray-600 mb-3">
                     <Calendar className="h-4 w-4 text-[#A67C52]" />
-                    <span className="text-sm">{formatEventDate(event.date)}</span>
+                    <span className="text-sm">{(event.date)}</span>
                   </div>
 
                   <h3 className="text-xl font-semibold mb-2 text-gray-800 line-clamp-2">{event.title}</h3>
