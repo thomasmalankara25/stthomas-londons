@@ -178,3 +178,20 @@ export class EventsService {
 }
 
 export const eventsService = new EventsService()
+
+// Standalone functions for direct use in components
+export const getEventById = async (id: string): Promise<Event | null> => {
+  const numericId = parseInt(id, 10)
+  if (isNaN(numericId)) {
+    return null
+  }
+  return eventsService.getById(numericId)
+}
+
+export const getAllEvents = async (): Promise<Event[]> => {
+  return eventsService.getAll()
+}
+
+export const getUpcomingEvents = async (): Promise<Event[]> => {
+  return eventsService.getUpcoming()
+}

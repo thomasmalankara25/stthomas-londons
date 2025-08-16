@@ -115,22 +115,14 @@ export function EventsCarousel({ events }: EventsCarouselProps) {
                 <div className="p-6">
                   <div className="flex items-center gap-2 text-gray-600 mb-3">
                     <Calendar className="h-4 w-4 text-[#A67C52]" />
-                    <span className="text-sm">{(event.date)}</span>
+                    <span className="text-sm">{formatEventDate(event.event_date || event.date || "")}</span>
                   </div>
 
                   <h3 className="text-xl font-semibold mb-2 text-gray-800 line-clamp-2">{event.title}</h3>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">{event.description}</p>
 
-                  {event.registration_form?.enabled ? (
-                    <Link href={`/events/${event.id}/register`}>
-                      <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
-                        <Button className="w-full bg-[#A67C52] hover:bg-[#8B6F47] text-white text-sm font-medium tracking-wide rounded-sm">
-                          REGISTER NOW
-                        </Button>
-                      </motion.div>
-                    </Link>
-                  ) : (
-                    <Link href={`/events`}>
+                
+                    <Link href={`/events/${event.id}`}>
                       <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
                         <Button
                           variant="outline"
@@ -140,7 +132,7 @@ export function EventsCarousel({ events }: EventsCarouselProps) {
                         </Button>
                       </motion.div>
                     </Link>
-                  )}
+                  
                 </div>
               </div>
             </motion.div>

@@ -147,22 +147,15 @@ export default function EventsPage() {
                         </div>
                       </div>
 
-                      <p className="mb-4 text-sm leading-relaxed text-gray-600">{event.description}</p>
+                      <p className="mb-4 text-sm leading-relaxed line-clamp-4 text-gray-600">{event.description}</p>
 
-                      {event.registration_form?.enabled ? (
-                        <Link href={`/events/${event.id}/register`}>
+                     
+                         <Link href={`/events/${event.id}`}>
                           <Button className="w-full rounded-sm bg-[#A67C52] py-2 text-sm font-medium tracking-wide text-white hover:bg-[#8B6F47]">
-                            REGISTER NOW
+                            KNOW MORE
                           </Button>
                         </Link>
-                      ) : (
-                        <Button
-                          disabled
-                          className="w-full rounded-sm bg-gray-300 py-2 text-sm font-medium tracking-wide text-gray-500"
-                        >
-                          NO REGISTRATION REQUIRED
-                        </Button>
-                      )}
+                     
                     </div>
                   </div>
                 ))}
