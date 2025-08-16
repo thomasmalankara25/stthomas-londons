@@ -405,7 +405,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              Our Upcoming Events List is Here
+              Our Upcoming Events List
             </motion.h2>
 
             {isLoadingEvents ? (
