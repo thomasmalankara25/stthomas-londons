@@ -59,14 +59,14 @@ export function Footer() {
             <h4 className="text-lg font-semibold text-[#d4af37]">Follow Us</h4>
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="https://www.facebook.com/malankara.catholics.3/"
                 className="bg-[#d4af37] p-2 rounded-full hover:bg-[#b8941f] transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5 text-[#2c1810]" />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/st.thomassmc"
                 className="bg-[#d4af37] p-2 rounded-full hover:bg-[#b8941f] transition-colors"
                 aria-label="Instagram"
               >
