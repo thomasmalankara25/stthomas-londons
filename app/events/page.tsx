@@ -131,7 +131,7 @@ export default function EventsPage() {
                       <div className="mb-4 space-y-2 text-gray-600">
                         <div className="flex items-center gap-2">
                           <Calendar className="h-4 w-4 text-[#A67C52]" />
-                          <span className="text-sm">{formatDate(event.date || event.event_date)}</span>
+                          <span className="text-sm">{(event.date || event.event_date)}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4 text-[#A67C52]" />

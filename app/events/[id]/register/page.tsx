@@ -189,7 +189,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center gap-2 text-gray-600">
                       <Calendar className="w-4 h-4 text-[#A67C52]" />
-                      <span className="text-sm">{formatDate(event.date)}</span>
+                      <span className="text-sm">{(event.date)}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">
                       <Clock className="w-4 h-4 text-[#A67C52]" />

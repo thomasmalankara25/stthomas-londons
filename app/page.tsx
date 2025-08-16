@@ -359,7 +359,7 @@ export default function Home() {
                 >
                   <motion.div
                     className="mb-6 flex justify-center"
-                    whileHover={{ rotate: 360 }}
+                   
                     transition={{ duration: 0.8 }}
                   >
                     <Image
