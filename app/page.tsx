@@ -10,11 +10,14 @@ import { newsService } from "@/lib/api/news"
 import type { News } from "@/lib/supabase"
 import { eventsService } from "@/lib/api/events"
 import type { Event } from "@/lib/supabase"
+import { massService } from "@/lib/api/mass"
+import type { MassSettings } from "@/lib/supabase"
 import { formatDateForDisplay } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { AnimatedWrapper } from "@/components/animated-wrapper"
 import { AnimatedSection } from "@/components/animated-section"
 import { AnimatedGrid } from "@/components/animated-grid"
+import { Calendar, MapPin, Mail, Building2 } from "lucide-react"
 import {
   heroImageVariants,
   slideInLeftVariants,
@@ -30,6 +33,8 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([])
   const [isLoadingEvents, setIsLoadingEvents] = useState(true)
+  const [massSettings, setMassSettings] = useState<MassSettings | null>(null)
+  const [isLoadingMass, setIsLoadingMass] = useState(true)
 
   useEffect(() => {
     loadData()
@@ -39,18 +44,26 @@ export default function Home() {
     try {
       setIsLoadingNews(true)
       setIsLoadingEvents(true)
+      setIsLoadingMass(true)
 
-      const [newsData, eventsData] = await Promise.all([newsService.getPublished(), eventsService.getUpcoming()])
+      const [newsData, eventsData, massData] = await Promise.all([
+        newsService.getPublished(), 
+        eventsService.getUpcoming(),
+        massService.getSettings()
+      ])
 
       // Get all news articles for the carousel
       setLatestNews(newsData)
       // Get all upcoming events
       setUpcomingEvents(eventsData)
+      // Get mass settings
+      setMassSettings(massData)
     } catch (error) {
       console.error("Error loading data:", error)
     } finally {
       setIsLoadingNews(false)
       setIsLoadingEvents(false)
+      setIsLoadingMass(false)
     }
   }
 
@@ -392,6 +405,164 @@ export default function Home() {
                 </motion.div>
               </Link>
             </motion.div>
+          </div>
+        </AnimatedSection>
+
+        {/* Mass Information Section */}
+        <AnimatedSection className="py-16 bg-white">
+          <div className="container mx-auto px-4 md:px-6">
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <motion.div
+                className="flex items-center justify-center gap-4 mb-4"
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <div className="w-12 h-px bg-[#A67C52]"></div>
+                <span className="text-[#A67C52] text-sm font-medium tracking-wide">Mass Schedule</span>
+                <div className="w-12 h-px bg-[#A67C52]"></div>
+              </motion.div>
+              <motion.h2
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                Join Us for Holy Mass
+              </motion.h2>
+              <motion.p
+                className="text-gray-600 max-w-2xl mx-auto leading-relaxed"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                Experience the sacred liturgy and spiritual fellowship at our church.
+              </motion.p>
+            </motion.div>
+
+            {isLoadingMass ? (
+              <motion.div
+                className="text-center py-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6 }}
+              >
+                <motion.div
+                  className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A67C52] mx-auto mb-4"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                />
+                <p className="text-gray-600">Loading mass information...</p>
+              </motion.div>
+            ) : massSettings ? (
+              <motion.div
+                className="max-w-4xl mx-auto"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <div className="grid md:grid-cols-2 gap-8">
+                  {/* Church Information */}
+                  <motion.div
+                    className="bg-[#f8f4ef] p-8 rounded-2xl border border-[#A67C52]/20"
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-[#A67C52] rounded-full flex items-center justify-center">
+                        <Building2 className="w-5 h-5 text-white" />
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-800">Church Information</h3>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-sm font-medium text-[#A67C52] mb-1">Church Name</p>
+                        <p className="text-gray-700">{massSettings.church_name}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-[#A67C52] mb-1">Contact Email</p>
+                        <div className="flex items-center gap-2">
+                          <Mail className="w-4 h-4 text-[#A67C52]" />
+                          <p className="text-gray-700">{massSettings.email}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Mass Schedule */}
+                  <motion.div
+                    className="bg-[#f8f4ef] p-8 rounded-2xl border border-[#A67C52]/20"
+                    initial={{ opacity: 0, x: 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-[#A67C52] rounded-full flex items-center justify-center">
+                        <Calendar className="w-5 h-5 text-white" />
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-800">Mass Schedule</h3>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-sm font-medium text-[#A67C52] mb-1">Sunday Mass Time</p>
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-[#A67C52]" />
+                          <p className="text-gray-700 text-lg font-medium">{massSettings.mass_time}</p>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-[#A67C52] mb-1">Church Address</p>
+                        <div className="flex items-start gap-2">
+                          <MapPin className="w-4 h-4 text-[#A67C52] mt-0.5 flex-shrink-0" />
+                          <p className="text-gray-700">{massSettings.address}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Call to Action */}
+                <motion.div
+                  className="text-center mt-8"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                >
+                  <Link href="/community">
+                    <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
+                      <Button className="bg-[#A67C52] hover:bg-[#8B6F47] text-white">
+                        Learn More About Our Community
+                      </Button>
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              </motion.div>
+            ) : (
+              <motion.div
+                className="text-center py-12"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <p className="text-gray-500 text-lg mb-4">Mass information not available at the moment.</p>
+                <p className="text-gray-400">Please check back later or contact the church office.</p>
+              </motion.div>
+            )}
           </div>
         </AnimatedSection>
 

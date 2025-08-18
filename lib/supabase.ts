@@ -103,3 +103,13 @@ export interface MembershipRegistration {
   created_at: string
   updated_at: string
 }
+
+export interface MassSettings {
+  id?: number
+  church_name: string
+  email: string
+  mass_time: string
+  address: string
+  created_at?: string
+  updated_at?: string
+}

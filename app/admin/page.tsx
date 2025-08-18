@@ -11,8 +11,9 @@ import { Badge } from "@/components/ui/badge"
 import { AdminAuthGuard } from "@/components/admin-auth-guard"
 import { newsService } from "@/lib/api/news"
 import { eventsService } from "@/lib/api/events"
+import { massService } from "@/lib/api/mass"
 import { authService } from "@/lib/auth"
-import type { News, Event } from "@/lib/supabase"
+import type { News, Event, MassSettings } from "@/lib/supabase"
 
 export default function AdminPanel() {
   const [news, setNews] = useState<News[]>([])
@@ -21,6 +22,16 @@ export default function AdminPanel() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
   const [totalRegistrations, setTotalRegistrations] = useState(0)
+  
+  // Mass settings state
+  const [massSettings, setMassSettings] = useState<MassSettings>({
+    church_name: "St. Thomas Malankara Catholic Church",
+    email: "jobin.thomas@MCCNA.org",
+    mass_time: "04:00 PM EST",
+    address: "1669 Richmond St, Dorchester, ON N0L 1G4"
+  })
+  const [isSavingSettings, setIsSavingSettings] = useState(false)
+  const [settingsSaved, setSettingsSaved] = useState(false)
 
   useEffect(() => {
     loadData()
@@ -31,7 +42,7 @@ export default function AdminPanel() {
       setIsLoading(true)
       setError("")
 
-      const [newsData, eventsData] = await Promise.all([
+      const [newsData, eventsData, massData] = await Promise.all([
         newsService.getAll().catch((err) => {
           console.error("Error loading news:", err)
           return []
@@ -40,10 +51,19 @@ export default function AdminPanel() {
           console.error("Error loading events:", err)
           return []
         }),
+        massService.getSettings().catch((err) => {
+          console.error("Error loading mass settings:", err)
+          return null
+        }),
       ])
 
       setNews(newsData)
       setEvents(eventsData)
+      
+      // Load mass settings if they exist
+      if (massData) {
+        setMassSettings(massData)
+      }
 
       // Load total registrations count with better error handling
       try {
@@ -88,6 +108,21 @@ export default function AdminPanel() {
   const handleLogout = async () => {
     await authService.logout()
     window.location.href = "/admin/login"
+  }
+
+  const handleSaveMassSettings = async () => {
+    try {
+      setIsSavingSettings(true)
+      const savedSettings = await massService.saveSettings(massSettings)
+      setMassSettings(savedSettings)
+      setSettingsSaved(true)
+      setTimeout(() => setSettingsSaved(false), 3000) // Hide after 3 seconds
+    } catch (error) {
+      console.error("Error saving mass settings:", error)
+      alert("Failed to save settings. Please try again.")
+    } finally {
+      setIsSavingSettings(false)
+    }
   }
 
   const getStatusBadge = (status: string) => {
@@ -585,6 +620,26 @@ export default function AdminPanel() {
                 <p className="text-gray-600">Manage your website settings</p>
               </div>
 
+              {/* Success Message */}
+              {settingsSaved && (
+                <div className="col-span-full">
+                  <div className="bg-green-50 border border-green-200 rounded-md p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm font-medium text-green-800">
+                          Settings saved successfully!
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="grid md:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
@@ -596,7 +651,8 @@ export default function AdminPanel() {
                       <label className="text-sm font-medium text-gray-700">Church Name</label>
                       <input
                         type="text"
-                        defaultValue="St. Thomas Malankara Catholic Church"
+                        value={massSettings.church_name}
+                        onChange={(e) => setMassSettings({ ...massSettings, church_name: e.target.value })}
                         className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A67C52]"
                       />
                     </div>
@@ -604,11 +660,18 @@ export default function AdminPanel() {
                       <label className="text-sm font-medium text-gray-700">Contact Email</label>
                       <input
                         type="email"
-                        defaultValue="jobin.thomas@MCCNA.org"
+                        value={massSettings.email}
+                        onChange={(e) => setMassSettings({ ...massSettings, email: e.target.value })}
                         className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A67C52]"
                       />
                     </div>
-                    <Button className="bg-[#A67C52] hover:bg-[#8B6F47] text-white">Save Changes</Button>
+                    <Button 
+                      onClick={handleSaveMassSettings}
+                      disabled={isSavingSettings}
+                      className="bg-[#A67C52] hover:bg-[#8B6F47] text-white disabled:opacity-50"
+                    >
+                      {isSavingSettings ? "Saving..." : "Save Changes"}
+                    </Button>
                   </CardContent>
                 </Card>
 
@@ -622,19 +685,27 @@ export default function AdminPanel() {
                       <label className="text-sm font-medium text-gray-700">Sunday Mass Time</label>
                       <input
                         type="text"
-                        defaultValue="04:00 PM EST"
+                        value={massSettings.mass_time}
+                        onChange={(e) => setMassSettings({ ...massSettings, mass_time: e.target.value })}
                         className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A67C52]"
                       />
                     </div>
                     <div>
                       <label className="text-sm font-medium text-gray-700">Church Address</label>
                       <textarea
-                        defaultValue="1669 Richmond St, Dorchester, ON N0L 1G4"
+                        value={massSettings.address}
+                        onChange={(e) => setMassSettings({ ...massSettings, address: e.target.value })}
                         className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A67C52]"
                         rows={3}
                       />
                     </div>
-                    <Button className="bg-[#A67C52] hover:bg-[#8B6F47] text-white">Update Schedule</Button>
+                    <Button 
+                      onClick={handleSaveMassSettings}
+                      disabled={isSavingSettings}
+                      className="bg-[#A67C52] hover:bg-[#8B6F47] text-white disabled:opacity-50"
+                    >
+                      {isSavingSettings ? "Saving..." : "Update Schedule"}
+                    </Button>
                   </CardContent>
                 </Card>
               </div>
