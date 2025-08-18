@@ -329,12 +329,13 @@ export default function Community() {
                   REGISTER NOW
                 </Button>
               </Link>
-              <Button
+              {/* Donate Button - Temporarily Hidden */}
+              {/* <Button
                 variant="outline"
                 className="text-[#a67c52] border-white hover:bg-white/20 px-6 py-2.5 text-sm font-medium tracking-wide rounded-sm bg-transparent"
               >
                 DONATE FUND
-              </Button>
+              </Button> */}
             </div>
           </div>
         </section>

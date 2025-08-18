@@ -150,7 +150,8 @@ export function MobileMenu() {
                 ))}
               </motion.nav>
 
-              <motion.div variants={mobileMenuItemVariants}>
+              {/* Donate Button - Temporarily Hidden */}
+              {/* <motion.div variants={mobileMenuItemVariants}>
                 <Button
                   className="w-full bg-[#A67C52] hover:bg-[#8B6F47] text-white py-3 text-sm font-medium tracking-wide rounded-sm"
                   asChild
@@ -159,7 +160,7 @@ export function MobileMenu() {
                     DONATE FUND
                   </motion.div>
                 </Button>
-              </motion.div>
+              </motion.div> */}
             </motion.div>
           </>
         )}

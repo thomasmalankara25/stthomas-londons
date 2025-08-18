@@ -155,8 +155,8 @@ export function Navigation() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {/* Donate Button */}
-          <motion.div 
+          {/* Donate Button - Temporarily Hidden */}
+          {/* <motion.div 
             variants={buttonVariants} 
             whileHover="hover" 
             whileTap="tap"
@@ -165,7 +165,7 @@ export function Navigation() {
             <Button className="bg-[#A67C52] hover:bg-[#8B6F47] text-white px-4 md:px-6 py-2 text-sm font-medium tracking-wide rounded-sm transition-all duration-200 hover:shadow-lg">
               DONATE FUND
             </Button>
-          </motion.div>
+          </motion.div> */}
           
           {/* Mobile Menu */}
           <MobileMenu />
