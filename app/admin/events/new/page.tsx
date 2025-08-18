@@ -74,6 +74,8 @@ export default function AddEvent() {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [hasRegistrationForm, setHasRegistrationForm] = useState(false)
+  const [useExternalLink, setUseExternalLink] = useState(false)
+  const [externalLink, setExternalLink] = useState("")
   const [formFields, setFormFields] = useState<FormField[]>(defaultFormFields)
   const [customFields, setCustomFields] = useState<FormField[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -156,12 +158,13 @@ export default function AddEvent() {
         date: normalizeDateForDatabase(formData.date),
         image_url: imageUrl,
         status,
-        registration_form: hasRegistrationForm
+        registration_form: hasRegistrationForm && !useExternalLink
           ? {
               enabled: true,
               fields: [...formFields, ...customFields],
             }
-          : undefined,
+          : null,
+        external_link: useExternalLink ? externalLink : null,
       }
 
       await eventsService.create(finalData)
@@ -296,6 +299,95 @@ export default function AddEvent() {
                 </CardContent>
               </Card>
 
+              {/* Registration Options */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Registration Options</CardTitle>
+                  <CardDescription>Choose how attendees can register for this event</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Radio Buttons */}
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        id="no-registration"
+                        name="registration-type"
+                        checked={!hasRegistrationForm && !useExternalLink}
+                        onChange={() => {
+                          setHasRegistrationForm(false)
+                          setUseExternalLink(false)
+                          setExternalLink("")
+                          setFormFields(defaultFormFields)
+                          setCustomFields([])
+                        }}
+                        className="w-4 h-4 text-[#A67C52] border-gray-300 focus:ring-[#A67C52]"
+                      />
+                      <label htmlFor="no-registration" className="text-sm font-medium text-gray-700">
+                        No Registration Required
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        id="registration-form"
+                        name="registration-type"
+                        checked={hasRegistrationForm && !useExternalLink}
+                        onChange={() => {
+                          setHasRegistrationForm(true)
+                          setUseExternalLink(false)
+                          setExternalLink("")
+                        }}
+                        className="w-4 h-4 text-[#A67C52] border-gray-300 focus:ring-[#A67C52]"
+                      />
+                      <label htmlFor="registration-form" className="text-sm font-medium text-gray-700">
+                        Use Registration Form
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        id="external-link"
+                        name="registration-type"
+                        checked={useExternalLink}
+                        onChange={() => {
+                          setHasRegistrationForm(false)
+                          setUseExternalLink(true)
+                          setFormFields(defaultFormFields)
+                          setCustomFields([])
+                        }}
+                        className="w-4 h-4 text-[#A67C52] border-gray-300 focus:ring-[#A67C52]"
+                      />
+                      <label htmlFor="external-link" className="text-sm font-medium text-gray-700">
+                        Use External Link
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* External Link Input */}
+                  {useExternalLink && (
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <label className="text-sm font-medium text-gray-700 mb-2 block">
+                        External Registration Link *
+                      </label>
+                      <input
+                        type="url"
+                        value={externalLink}
+                        onChange={(e) => setExternalLink(e.target.value)}
+                        placeholder="https://example.com/register"
+                        className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required={useExternalLink}
+                      />
+                      <p className="text-xs text-blue-600 mt-1">
+                        Enter the URL where attendees can register for this event
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
               {/* Registration Form Builder */}
               <Card>
                 <CardHeader>
@@ -304,11 +396,15 @@ export default function AddEvent() {
                       <CardTitle>Registration Form</CardTitle>
                       <CardDescription>Add a registration form for attendees (optional)</CardDescription>
                     </div>
-                    <Switch checked={hasRegistrationForm} onCheckedChange={setHasRegistrationForm} />
+                    <Switch 
+                      checked={hasRegistrationForm} 
+                      onCheckedChange={setHasRegistrationForm}
+                      disabled={useExternalLink}
+                    />
                   </div>
                 </CardHeader>
 
-                {hasRegistrationForm && (
+                {hasRegistrationForm && !useExternalLink && (
                   <CardContent className="space-y-6">
                     {/* Default Fields */}
                     <div>
@@ -551,7 +647,7 @@ export default function AddEvent() {
                     </div>
                   </div>
 
-                  {hasRegistrationForm && (
+                  {hasRegistrationForm && !useExternalLink && (
                     <div className="p-3 bg-green-50 rounded-lg">
                       <div className="flex items-center gap-2 text-green-700">
                         <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -559,6 +655,17 @@ export default function AddEvent() {
                       </div>
                       <p className="text-xs text-green-600 mt-1">
                         {[...formFields, ...customFields].length} fields configured
+                      </p>
+                    </div>
+                  )}
+                  {useExternalLink && (
+                    <div className="p-3 bg-blue-50 rounded-lg">
+                      <div className="flex items-center gap-2 text-blue-700">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span className="text-sm font-medium">External Link Enabled</span>
+                      </div>
+                      <p className="text-xs text-blue-600 mt-1">
+                        Registration via external link
                       </p>
                     </div>
                   )}
@@ -641,10 +748,17 @@ export default function AddEvent() {
                       {formData.description || "Event description will appear here..."}
                     </div>
 
-                    {hasRegistrationForm && (
+                    {hasRegistrationForm && !useExternalLink && (
                       <div className="pt-2 border-t border-gray-200">
                         <Button size="sm" className="w-full bg-[#A67C52] hover:bg-[#8B6F47] text-white text-xs">
                           Register Now
+                        </Button>
+                      </div>
+                    )}
+                    {useExternalLink && (
+                      <div className="pt-2 border-t border-gray-200">
+                        <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs">
+                          Register via External Link
                         </Button>
                       </div>
                     )}

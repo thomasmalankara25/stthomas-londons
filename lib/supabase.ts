@@ -49,7 +49,8 @@ export interface Event {
   registration_form?: {
     enabled: boolean
     fields?: any[]
-  }
+  } | null
+  external_link?: string | null
   created_at: string
   updated_at: string
   created_by?: number

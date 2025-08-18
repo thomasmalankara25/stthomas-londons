@@ -74,6 +74,8 @@ export default function EditEvent({ params }: { params: { id: string } }) {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [hasRegistrationForm, setHasRegistrationForm] = useState(false)
+  const [useExternalLink, setUseExternalLink] = useState(false)
+  const [externalLink, setExternalLink] = useState("")
   const [formFields, setFormFields] = useState<FormField[]>(defaultFormFields)
   const [customFields, setCustomFields] = useState<FormField[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -106,8 +108,14 @@ export default function EditEvent({ params }: { params: { id: string } }) {
           setImagePreview(eventData.image_url)
         }
 
-        if (eventData.registration_form?.enabled) {
+        // Handle registration form or external link
+        if (eventData.external_link) {
+          setUseExternalLink(true)
+          setExternalLink(eventData.external_link)
+          setHasRegistrationForm(false)
+        } else if (eventData.registration_form?.enabled) {
           setHasRegistrationForm(true)
+          setUseExternalLink(false)
           const fields = eventData.registration_form.fields || []
           const defaultFields = fields.filter((f) => ["name", "phone", "email", "age"].includes(f.id))
           const customFields = fields.filter((f) => !["name", "phone", "email", "age"].includes(f.id))
@@ -212,12 +220,13 @@ export default function EditEvent({ params }: { params: { id: string } }) {
         ...formData,
         image_url: imageUrl,
         status,
-        registration_form: hasRegistrationForm
+        registration_form: hasRegistrationForm && !useExternalLink
           ? {
               enabled: true,
               fields: [...formFields, ...customFields],
             }
-          : undefined,
+          : null,
+        external_link: useExternalLink ? externalLink : null,
       }
 
       await eventsService.update(finalData)
@@ -383,6 +392,81 @@ export default function EditEvent({ params }: { params: { id: string } }) {
                 </CardContent>
               </Card>
 
+                             {/* Registration Options - Disabled for Editing */}
+               <Card className="opacity-60">
+                 <CardHeader>
+                   <CardTitle className="flex items-center gap-2">
+                     Registration Options
+                     <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">Read Only</span>
+                   </CardTitle>
+                   <CardDescription>Registration type cannot be changed while editing an event</CardDescription>
+                 </CardHeader>
+                 <CardContent className="space-y-6">
+                   {/* Radio Buttons - Disabled */}
+                   <div className="space-y-4">
+                     <div className="flex items-center space-x-2">
+                       <input
+                         type="radio"
+                         id="no-registration-edit"
+                         name="registration-type-edit"
+                         checked={!hasRegistrationForm && !useExternalLink}
+                         disabled
+                         className="w-4 h-4 text-gray-400 border-gray-300 cursor-not-allowed"
+                       />
+                       <label htmlFor="no-registration-edit" className="text-sm font-medium text-gray-500 cursor-not-allowed">
+                         No Registration Required
+                       </label>
+                     </div>
+                     
+                     <div className="flex items-center space-x-2">
+                       <input
+                         type="radio"
+                         id="registration-form-edit"
+                         name="registration-type-edit"
+                         checked={hasRegistrationForm && !useExternalLink}
+                         disabled
+                         className="w-4 h-4 text-gray-400 border-gray-300 cursor-not-allowed"
+                       />
+                       <label htmlFor="registration-form-edit" className="text-sm font-medium text-gray-500 cursor-not-allowed">
+                         Use Registration Form
+                       </label>
+                     </div>
+                     
+                     <div className="flex items-center space-x-2">
+                       <input
+                         type="radio"
+                         id="external-link-edit"
+                         name="registration-type-edit"
+                         checked={useExternalLink}
+                         disabled
+                         className="w-4 h-4 text-gray-400 border-gray-300 cursor-not-allowed"
+                       />
+                       <label htmlFor="external-link-edit" className="text-sm font-medium text-gray-500 cursor-not-allowed">
+                         Use External Link
+                       </label>
+                     </div>
+                   </div>
+
+                   {/* External Link Input - Disabled */}
+                   {useExternalLink && (
+                     <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                       <label className="text-sm font-medium text-gray-500 mb-2 block">
+                         External Registration Link
+                       </label>
+                       <input
+                         type="url"
+                         value={externalLink}
+                         disabled
+                         className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-500 bg-gray-100 cursor-not-allowed"
+                       />
+                       <p className="text-xs text-gray-500 mt-1">
+                         This field cannot be modified while editing the event
+                       </p>
+                     </div>
+                   )}
+                 </CardContent>
+               </Card>
+
               {/* Registration Form Builder */}
               <Card>
                 <CardHeader>
@@ -391,11 +475,15 @@ export default function EditEvent({ params }: { params: { id: string } }) {
                       <CardTitle>Registration Form</CardTitle>
                       <CardDescription>Add a registration form for attendees (optional)</CardDescription>
                     </div>
-                    <Switch checked={hasRegistrationForm} onCheckedChange={setHasRegistrationForm} />
+                    <Switch 
+                      checked={hasRegistrationForm} 
+                      onCheckedChange={setHasRegistrationForm}
+                      disabled={useExternalLink}
+                    />
                   </div>
                 </CardHeader>
 
-                {hasRegistrationForm && (
+                {hasRegistrationForm && !useExternalLink && (
                   <CardContent className="space-y-6">
                     {/* Default Fields */}
                     <div>
@@ -633,7 +721,7 @@ export default function EditEvent({ params }: { params: { id: string } }) {
                     </div>
                   </div>
 
-                  {hasRegistrationForm && (
+                  {hasRegistrationForm && !useExternalLink && (
                     <div className="p-3 bg-green-50 rounded-lg">
                       <div className="flex items-center gap-2 text-green-700">
                         <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -641,6 +729,17 @@ export default function EditEvent({ params }: { params: { id: string } }) {
                       </div>
                       <p className="text-xs text-green-600 mt-1">
                         {[...formFields, ...customFields].length} fields configured
+                      </p>
+                    </div>
+                  )}
+                  {useExternalLink && (
+                    <div className="p-3 bg-blue-50 rounded-lg">
+                      <div className="flex items-center gap-2 text-blue-700">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span className="text-sm font-medium">External Link Enabled</span>
+                      </div>
+                      <p className="text-xs text-blue-600 mt-1">
+                        Registration via external link
                       </p>
                     </div>
                   )}
@@ -723,10 +822,17 @@ export default function EditEvent({ params }: { params: { id: string } }) {
                       {formData.description || "Event description will appear here..."}
                     </div>
 
-                    {hasRegistrationForm && (
+                    {hasRegistrationForm && !useExternalLink && (
                       <div className="pt-2 border-t border-gray-200">
                         <Button size="sm" className="w-full bg-[#A67C52] hover:bg-[#8B6F47] text-white text-xs">
                           Register Now
+                        </Button>
+                      </div>
+                    )}
+                    {useExternalLink && (
+                      <div className="pt-2 border-t border-gray-200">
+                        <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs">
+                          Register via External Link
                         </Button>
                       </div>
                     )}

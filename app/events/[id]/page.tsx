@@ -192,6 +192,18 @@ export default function EventDetailPage() {
                          </Button>
                        </Link>
                      </div>
+                   ) : event.external_link ? (
+                     <div className="pt-4">
+                       <a 
+                         href={event.external_link} 
+                         target="_blank" 
+                         rel="noopener noreferrer"
+                       >
+                         <Button className="w-full bg-[#A67C52] hover:bg-[#8B6F47] text-white">
+                           Register for Event
+                         </Button>
+                       </a>
+                     </div>
                    ) : (
                      <div className="pt-4">
                        <p className="text-sm text-gray-600 text-center">
