@@ -4,14 +4,14 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 // Initialize S3 client with fallback credentials
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION || 'us-east-2',
+  region: process.env.AWS_REGION || '',
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'AKIA3GFGRLXXPITTXL27',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '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',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
   },
 })
 
-const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || 'thomasbucket26'
+const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || ''
 
 export async function POST(request: NextRequest) {
   try {
