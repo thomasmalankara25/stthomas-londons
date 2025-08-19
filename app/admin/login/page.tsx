@@ -126,7 +126,7 @@ export default function AdminLogin() {
               </Link>
             </div>
 
-            <div className="mt-4 p-3 bg-gray-50 rounded-md">
+            {/* <div className="mt-4 p-3 bg-gray-50 rounded-md">
               <p className="text-xs text-gray-600 text-center">
                 <strong>Demo Credentials:</strong>
                 <br />
@@ -134,7 +134,7 @@ export default function AdminLogin() {
                 <br />
                 Password: admin123
               </p>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       </div>
