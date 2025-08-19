@@ -227,7 +227,10 @@ export default function NewsPage() {
                           </h3>
 
                           <p className="mb-4 text-sm leading-relaxed text-gray-600 line-clamp-3">
-                            {article.description}
+                            <span 
+                              className="rich-text-content"
+                              dangerouslySetInnerHTML={{ __html: article.description || '' }}
+                            />
                           </p>
 
                           <Button

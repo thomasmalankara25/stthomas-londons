@@ -469,7 +469,10 @@ export default function AdminPanel() {
                                   </div>
                                   <div>
                                     <p className="font-medium text-gray-800">{item.title}</p>
-                                    <p className="text-sm text-gray-500 line-clamp-1">{item.description}</p>
+                                    <div 
+                                      className="text-sm text-gray-500 line-clamp-1 rich-text-content"
+                                      dangerouslySetInnerHTML={{ __html: item.description || '' }}
+                                    />
                                   </div>
                                 </div>
                               </td>
@@ -558,7 +561,10 @@ export default function AdminPanel() {
                               <td className="p-4">
                                 <div>
                                   <p className="font-medium text-gray-800">{item.title}</p>
-                                  <p className="text-sm text-gray-500 line-clamp-1">{item.description}</p>
+                                  <div 
+                                    className="text-sm text-gray-500 line-clamp-1 rich-text-content"
+                                    dangerouslySetInnerHTML={{ __html: item.description || '' }}
+                                  />
                                 </div>
                               </td>
                               <td className="p-4">

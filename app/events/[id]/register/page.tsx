@@ -183,7 +183,13 @@ export default function EventRegistration({ params }: { params: { id: string } }
                     />
                   </div>
                   <CardTitle className="text-2xl">{event.title}</CardTitle>
-                  <CardDescription>{event.description}</CardDescription>
+                  <CardDescription>
+                  <div 
+                       className="rich-text-content text-gray-600 leading-relaxed"
+                       dangerouslySetInnerHTML={{ __html: event.description || '' }}
+                     />
+                    
+                    </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">

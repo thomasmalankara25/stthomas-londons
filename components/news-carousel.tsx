@@ -176,7 +176,12 @@ export function NewsCarousel() {
                         <h3 className="font-semibold text-lg text-gray-800 line-clamp-2 leading-tight">
                           {article.title}
                         </h3>
-                        <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">{article.description}</p>
+                        <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">
+                          <span 
+                            className="rich-text-content"
+                            dangerouslySetInnerHTML={{ __html: article.description || '' }}
+                          />
+                        </p>
                         <Link href={`/news/${article.id}`}>
                           <Button
                             variant="outline"

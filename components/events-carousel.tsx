@@ -119,7 +119,10 @@ export function EventsCarousel({ events }: EventsCarouselProps) {
                   </div>
 
                   <h3 className="text-xl font-semibold mb-2 text-gray-800 line-clamp-2">{event.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">{event.description}</p>
+                  <div 
+                    className="text-gray-600 text-sm mb-4 line-clamp-3 rich-text-content"
+                    dangerouslySetInnerHTML={{ __html: event.description || '' }}
+                  />
 
                 
                     <Link href={`/events/${event.id}`}>

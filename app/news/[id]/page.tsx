@@ -184,7 +184,25 @@ export default function NewsArticle({ params }: { params: { id: string } }) {
                   </div>
                 </div>
 
-                <p className="text-lg text-gray-600 leading-relaxed mb-8">{article.description}</p>
+                {/* News Description */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-800">Description</h3>
+                  <div 
+                    className="rich-text-content text-gray-600 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: article.description || '' }}
+                  />
+                </div>
+
+                {/* Full Content */}
+                {article.content && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-800">Full Content</h3>
+                    <div 
+                      className="rich-text-content text-gray-600 leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: article.content }}
+                    />
+                  </div>
+                )}
 
                 {/* Share Buttons */}
                 <div className="flex items-center gap-4 pb-8 border-b">

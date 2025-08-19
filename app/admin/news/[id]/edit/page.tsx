@@ -10,6 +10,7 @@ import { ArrowLeft, Upload, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { RichTextEditor } from "@/components/ui/rich-text-editor"
 import { AdminAuthGuard } from "@/components/admin-auth-guard"
 import { newsService } from "@/lib/api/news"
 import { uploadFileToS3 } from "@/lib/s3-upload"
@@ -249,27 +250,21 @@ export default function EditNews({ params }: { params: { id: string } }) {
 
                   <div>
                     <label className="text-sm font-medium text-gray-700 mb-2 block">Short Description *</label>
-                    <textarea
-                      name="description"
+                    <RichTextEditor
                       value={formData.description}
-                      onChange={handleInputChange}
+                      onChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
                       placeholder="Brief description that will appear in news listings"
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A67C52]"
-                      required
+                      className="w-full"
                     />
                   </div>
 
                   <div>
                     <label className="text-sm font-medium text-gray-700 mb-2 block">Full Content *</label>
-                    <textarea
-                      name="content"
+                    <RichTextEditor
                       value={formData.content}
-                      onChange={handleInputChange}
+                      onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
                       placeholder="Write the full article content here..."
-                      rows={12}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A67C52]"
-                      required
+                      className="w-full"
                     />
                   </div>
                 </CardContent>

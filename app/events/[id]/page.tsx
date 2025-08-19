@@ -146,8 +146,13 @@ export default function EventDetailPage() {
                    <CardTitle className="text-2xl text-gray-900">Event Details</CardTitle>
                  </CardHeader>
                  <CardContent className="space-y-6">
-                   <div className="prose prose-lg max-w-none">
-                     <div dangerouslySetInnerHTML={{ __html: event.description }} />
+                   {/* Event Description */}
+                   <div className="space-y-4">
+                     <h3 className="text-lg font-semibold text-gray-800">Description</h3>
+                     <div 
+                       className="rich-text-content text-gray-600 leading-relaxed"
+                       dangerouslySetInnerHTML={{ __html: event.description || '' }}
+                     />
                    </div>
                  </CardContent>
                </Card>

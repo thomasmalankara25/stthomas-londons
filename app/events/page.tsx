@@ -147,7 +147,12 @@ export default function EventsPage() {
                         </div>
                       </div>
 
-                      <p className="mb-4 text-sm leading-relaxed line-clamp-4 text-gray-600">{event.description}</p>
+                      <p className="mb-4 text-sm leading-relaxed line-clamp-4 text-gray-600">
+                        <span 
+                          className="rich-text-content"
+                          dangerouslySetInnerHTML={{ __html: event.description || '' }}
+                        />
+                      </p>
 
                      
                          <Link href={`/events/${event.id}`}>
