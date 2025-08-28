@@ -253,7 +253,11 @@ export default function NewsArticle({ params }: { params: { id: string } }) {
 
               {/* Article Content */}
               <div className="prose prose-lg max-w-none mb-12">
-                <div className="text-gray-700 leading-relaxed whitespace-pre-line">{article.content}</div>
+              <div 
+                    className="rich-text-content text-gray-600 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: article.content || '' }}
+                  />
+               
               </div>
 
               {/* Article Footer */}
@@ -324,8 +328,11 @@ export default function NewsArticle({ params }: { params: { id: string } }) {
                           <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 hover:text-[#A67C52] transition-colors">
                             {relatedArticle.title}
                           </h3>
-
-                          <p className="text-sm text-gray-600 line-clamp-2">{relatedArticle.description}</p>
+                          <div 
+                    className="rich-text-content  line-clamp-2 text-gray-600 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: relatedArticle.description || '' }}
+                  />
+                        
                         </div>
                       </div>
                     </Link>

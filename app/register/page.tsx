@@ -155,7 +155,7 @@ export default function RegisterPage() {
             <div className="mt-4 space-y-2">
               <h2 className="text-xl text-[#d4af37]">ST. THOMAS MALANKARA CATHOLIC CHURCH, LONDON ON</h2>
               <p className="text-sm">Address: 1669 Richmond St Dorchester ON</p>
-              <p className="text-sm">Contact: 226-989-6817 | george97dj@gmail.com</p>
+              <p className="text-sm">Contact: 226-347-4903 | jobin.thomas@MCCNA.org</p>
             </div>
           </CardHeader>
 

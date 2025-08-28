@@ -89,7 +89,7 @@ export function MobileMenu() {
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.2, duration: 0.4 }}
                   >
-                    APOCALYPTICA
+                    ST. THOMAS MALANKARA
                   </motion.div>
                   <motion.div
                     className="text-xs text-[#8B6F47] tracking-[0.2em] font-medium"
