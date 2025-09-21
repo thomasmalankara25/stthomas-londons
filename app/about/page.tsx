@@ -109,8 +109,8 @@ export default function About() {
               </div>
 
               {/* Image Slider */}
-              <div className="lg:sticky lg:top-8">
-                <ImageSlider images={galleryImages} />
+              <div className="lg:sticky lg:top-8  mt-20">
+                <ImageSlider  images={galleryImages} />
               </div>
             </div>
           </div>

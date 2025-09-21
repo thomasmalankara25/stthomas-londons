@@ -38,7 +38,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
   return (
     <div className="relative w-full max-w-4xl mx-auto">
       {/* Main image container */}
-      <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-[20px] shadow-lg">
+      <div className="relative h-[300px] md:h-[500px] lg:h-[400px] overflow-hidden rounded-[20px] shadow-lg">
         <Image
           src={images[currentIndex].src || "/placeholder.svg"}
           alt={images[currentIndex].alt}
