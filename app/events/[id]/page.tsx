@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { ImageModal } from "@/components/image-modal"
 import { motion } from "framer-motion"
 import { getEventById } from "@/lib/api/events"
 import type { Event } from "@/lib/supabase"
@@ -19,6 +20,7 @@ export default function EventDetailPage() {
   const [event, setEvent] = useState<Event | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false)
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -127,15 +129,30 @@ export default function EventDetailPage() {
                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
              {/* Left Side - Full Size Image */}
              <div className="lg:col-span-1">
-               <div className="relative h-[400px] md:h-[500px] lg:h-[700px] rounded-2xl overflow-hidden shadow-2xl">
+               <motion.div 
+                 className="relative h-[400px] md:h-[500px] lg:h-[700px] rounded-2xl overflow-hidden shadow-2xl cursor-pointer group"
+                 onClick={() => setIsImageModalOpen(true)}
+                 whileHover={{ scale: 1.02 }}
+                 transition={{ duration: 0.2 }}
+               >
                  <Image
                    src={event.image_url || "/placeholder.svg?height=700&width=600"}
                    alt={event.title}
                    fill
-                   className="object-cover"
+                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                    priority
                  />
-               </div>
+                 {/* Overlay with click hint */}
+                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                     <div className="bg-white/90 backdrop-blur-sm rounded-full p-3">
+                       <svg className="w-8 h-8 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                       </svg>
+                     </div>
+                   </div>
+                 </div>
+               </motion.div>
              </div>
 
              {/* Right Side - Description and Details */}
@@ -223,6 +240,17 @@ export default function EventDetailPage() {
            </div>
         </motion.div>
       </div>
+
+      {/* Image Modal - Only render when event is loaded */}
+      {event && (
+        <ImageModal
+          isOpen={isImageModalOpen}
+          onClose={() => setIsImageModalOpen(false)}
+          imageUrl={event.image_url || "/placeholder.svg?height=700&width=600"}
+          alt={event.title}
+          title={event.title}
+        />
+      )}
     </div>
   )
 }
