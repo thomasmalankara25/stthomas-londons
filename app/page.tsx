@@ -465,73 +465,100 @@ export default function Home() {
               </motion.div>
             ) : massSettings ? (
               <motion.div
-                className="max-w-4xl mx-auto"
+                className="max-w-6xl mx-auto"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <div className="grid md:grid-cols-2 gap-8">
-                  {/* Church Information */}
+                <div className="grid lg:grid-cols-3 gap-8 items-start">
+                  {/* Priest Image */}
                   <motion.div
-                    className="bg-[#f8f4ef] p-8 rounded-2xl border border-[#A67C52]/20"
+                    className="lg:col-span-1 flex justify-center lg:justify-start"
                     initial={{ opacity: 0, x: -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                   >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-[#A67C52] rounded-full flex items-center justify-center">
-                        <Building2 className="w-5 h-5 text-white" />
-                      </div>
-                      <h3 className="text-xl font-semibold text-gray-800">Church Information</h3>
-                    </div>
-                    <div className="space-y-3">
-                      <div>
-                        <p className="text-sm font-medium text-[#A67C52] mb-1">Church Name</p>
-                        <p className="text-gray-700">{massSettings.church_name}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-[#A67C52] mb-1">Contact Email</p>
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-[#A67C52]" />
-                          <p className="text-gray-700">{massSettings.email}</p>
-                        </div>
+                    <div className="relative w-64 h-80 lg:w-72 lg:h-96">
+                      <Image
+                        src="/images/rev-fr-jobin-thomas.png"
+                        alt="Rev. Fr. Jobin Thomas - Parish Priest"
+                        fill
+                        className="object-cover object-center rounded-2xl shadow-lg"
+                        style={{ objectPosition: "center top" }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+                      <div className="absolute bottom-4 left-4 right-4 text-white">
+                        <h4 className="font-semibold text-lg">Rev. Fr. Jobin Thomas</h4>
+                        <p className="text-sm opacity-90">Parish Priest</p>
                       </div>
                     </div>
                   </motion.div>
 
-                  {/* Mass Schedule */}
-                  <motion.div
-                    className="bg-[#f8f4ef] p-8 rounded-2xl border border-[#A67C52]/20"
-                    initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-[#A67C52] rounded-full flex items-center justify-center">
-                        <Calendar className="w-5 h-5 text-white" />
+                  {/* Mass Information Cards */}
+                  <div className="lg:col-span-2 grid md:grid-cols-2 gap-6">
+                    {/* Church Information */}
+                    <motion.div
+                      className="bg-[#f8f4ef] p-6 rounded-2xl border border-[#A67C52]/20"
+                      initial={{ opacity: 0, x: -30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.4 }}
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-[#A67C52] rounded-full flex items-center justify-center">
+                          <Building2 className="w-5 h-5 text-white" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-800">Church Information</h3>
                       </div>
-                      <h3 className="text-xl font-semibold text-gray-800">Mass Schedule</h3>
-                    </div>
-                    <div className="space-y-3">
-                      <div>
-                        <p className="text-sm font-medium text-[#A67C52] mb-1">Sunday Mass Time</p>
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-[#A67C52]" />
-                          <p className="text-gray-700 text-lg font-medium">{massSettings.mass_time}</p>
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-sm font-medium text-[#A67C52] mb-1">Church Name</p>
+                          <p className="text-gray-700">{massSettings.church_name}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-[#A67C52] mb-1">Contact Email</p>
+                          <div className="flex items-center gap-2">
+                            <Mail className="w-4 h-4 text-[#A67C52]" />
+                            <p className="text-gray-700">{massSettings.email}</p>
+                          </div>
                         </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-[#A67C52] mb-1">Church Address</p>
-                        <div className="flex items-start gap-2">
-                          <MapPin className="w-4 h-4 text-[#A67C52] mt-0.5 flex-shrink-0" />
-                          <p className="text-gray-700">{massSettings.address}</p>
+                    </motion.div>
+
+                    {/* Mass Schedule */}
+                    <motion.div
+                      className="bg-[#f8f4ef] p-6 rounded-2xl border border-[#A67C52]/20"
+                      initial={{ opacity: 0, x: 30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-[#A67C52] rounded-full flex items-center justify-center">
+                          <Calendar className="w-5 h-5 text-white" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-800">Mass Schedule</h3>
+                      </div>
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-sm font-medium text-[#A67C52] mb-1">Sunday Mass Time</p>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-[#A67C52]" />
+                            <p className="text-gray-700 text-lg font-medium">{massSettings.mass_time}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-[#A67C52] mb-1">Church Address</p>
+                          <div className="flex items-start gap-2">
+                            <MapPin className="w-4 h-4 text-[#A67C52] mt-0.5 flex-shrink-0" />
+                            <p className="text-gray-700">{massSettings.address}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  </div>
                 </div>
 
                 {/* Call to Action */}
@@ -540,7 +567,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
                 >
                   <Link href="/community">
                     <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
