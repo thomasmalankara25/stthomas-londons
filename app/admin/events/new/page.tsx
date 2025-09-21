@@ -29,34 +29,7 @@ const eventCategories = [
 ]
 
 const defaultFormFields: FormField[] = [
-  {
-    id: "name",
-    type: "text",
-    label: "Full Name",
-    required: true,
-    placeholder: "Enter your full name",
-  },
-  {
-    id: "phone",
-    type: "tel",
-    label: "Phone Number",
-    required: true,
-    placeholder: "Enter your phone number",
-  },
-  {
-    id: "email",
-    type: "email",
-    label: "Email Address",
-    required: false,
-    placeholder: "Enter your email (optional)",
-  },
-  {
-    id: "age",
-    type: "number",
-    label: "Age",
-    required: true,
-    placeholder: "Enter your age",
-  },
+  
 ]
 
 export default function AddEvent() {
@@ -405,7 +378,7 @@ export default function AddEvent() {
                 {hasRegistrationForm && !useExternalLink && (
                   <CardContent className="space-y-6">
                     {/* Default Fields */}
-                    <div>
+                    {/* <div>
                       <h4 className="text-sm font-medium text-gray-700 mb-4">Default Fields</h4>
                       <div className="space-y-4">
                         {formFields.map((field) => (
@@ -427,13 +400,13 @@ export default function AddEvent() {
                               <Switch
                                 checked={field.required}
                                 onCheckedChange={(checked) => updateDefaultField(field.id, { required: checked })}
-                                disabled={field.id === "name" || field.id === "phone" || field.id === "age"} // Keep name, phone, age as required
+                                 // Keep name, phone, age as required
                               />
                             </div>
                           </div>
                         ))}
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* Custom Fields */}
                     <div>
@@ -491,6 +464,7 @@ export default function AddEvent() {
                                   <option value="text">Text</option>
                                   <option value="email">Email</option>
                                   <option value="tel">Phone</option>
+                                  <option value="date">Date</option>
                                   <option value="number">Number</option>
                                 </select>
                               </div>
@@ -743,7 +717,11 @@ export default function AddEvent() {
                     </div>
 
                     <div className="text-xs text-gray-600 line-clamp-3">
-                      {formData.description || "Event description will appear here..."}
+                    <div 
+                       className="rich-text-content text-gray-600 leading-relaxed"
+                       dangerouslySetInnerHTML={{ __html: formData.description || "Event description will appear here..." }}
+                     />
+                     
                     </div>
 
                     {hasRegistrationForm && !useExternalLink && (

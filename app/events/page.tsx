@@ -129,22 +129,30 @@ export default function EventsPage() {
                       <h3 className="mb-3 text-xl font-semibold text-gray-800">{event.title}</h3>
 
                       <div className="mb-4 space-y-2 text-gray-600">
+                      {event.date && (
                         <div className="flex items-center gap-2">
                           <Calendar className="h-4 w-4 text-[#A67C52]" />
                           <span className="text-sm">{(event.date || event.event_date)}</span>
                         </div>
+                      )}
+                      {event.time && (
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4 text-[#A67C52]" />
                           <span className="text-sm">{event.time}</span>
                         </div>
+                      )}
+                      {event.location && (
                         <div className="flex items-center gap-2">
                           <MapPin className="h-4 w-4 text-[#A67C52]" />
                           <span className="text-sm">{event.location}</span>
                         </div>
+                      )}
+                      {event.attendees && (
                         <div className="flex items-center gap-2">
                           <Users className="h-4 w-4 text-[#A67C52]" />
                           <span className="text-sm">{event.attendees}</span>
                         </div>
+                      )}
                       </div>
 
                       <p className="mb-4 text-sm leading-relaxed line-clamp-4 text-gray-600">

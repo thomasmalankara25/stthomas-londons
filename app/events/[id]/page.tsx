@@ -164,6 +164,7 @@ export default function EventDetailPage() {
                  </CardHeader>
                  <CardContent className="space-y-6">
                    {/* Date & Time */}
+                   {event.date && (
                    <div className="flex items-start gap-3">
                      <Calendar className="w-5 h-5 text-[#A67C52] mt-1 flex-shrink-0" />
                      <div>
@@ -171,7 +172,7 @@ export default function EventDetailPage() {
                        <p className="text-sm text-gray-600">{formatEventTime(getEventDate())}</p>
                      </div>
                    </div>
-
+                   )}
                    <Separator />
 
                    {/* Location */}

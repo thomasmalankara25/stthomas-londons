@@ -193,22 +193,30 @@ export default function EventRegistration({ params }: { params: { id: string } }
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
+                    {event.date && (
                     <div className="flex items-center gap-2 text-gray-600">
                       <Calendar className="w-4 h-4 text-[#A67C52]" />
                       <span className="text-sm">{(event.date)}</span>
                     </div>
+                    )}
+                    {event.time && (
                     <div className="flex items-center gap-2 text-gray-600">
                       <Clock className="w-4 h-4 text-[#A67C52]" />
                       <span className="text-sm">{event.time}</span>
                     </div>
+                    )}
+                    {event.location && (
                     <div className="flex items-center gap-2 text-gray-600">
                       <MapPin className="w-4 h-4 text-[#A67C52]" />
                       <span className="text-sm">{event.location}</span>
                     </div>
+                    )}
+                    {event.attendees && (
                     <div className="flex items-center gap-2 text-gray-600">
                       <Users className="w-4 h-4 text-[#A67C52]" />
                       <span className="text-sm">{event.attendees}</span>
                     </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>

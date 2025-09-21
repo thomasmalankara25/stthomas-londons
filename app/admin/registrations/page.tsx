@@ -298,7 +298,10 @@ export default function RegistrationsPage() {
                             </Badge>
                           )}
                         </div>
-                        <CardDescription className="mb-3">{event.description}</CardDescription>
+                        <CardDescription className="mb-3">  <div 
+                       className="rich-text-content text-gray-600 leading-relaxed"
+                       dangerouslySetInnerHTML={{ __html: event.description || '' }}
+                     /></CardDescription>
                         <div className="flex items-center gap-4 text-sm text-gray-600">
                           <div className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />

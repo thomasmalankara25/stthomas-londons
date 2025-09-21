@@ -817,7 +817,12 @@ export default function EditEvent({ params }: { params: { id: string } }) {
                     </div>
 
                     <div className="text-xs text-gray-600 line-clamp-3">
-                      {formData.description || "Event description will appear here..."}
+
+                    <div 
+                       className="rich-text-content text-gray-600 leading-relaxed"
+                       dangerouslySetInnerHTML={{ __html: formData.description ||"Event description will appear here..." }}
+                     />
+                     
                     </div>
 
                     {hasRegistrationForm && !useExternalLink && (
