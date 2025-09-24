@@ -7,25 +7,21 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 
 interface ImageModalProps {
-  isOpen: boolean
-  onClose: () => void
   imageUrl: string
-  alt: string
-  title?: string
+  onClose: () => void
+  albumTitle?: string
 }
 
-export function ImageModal({ isOpen, onClose, imageUrl, alt, title }: ImageModalProps) {
+export function ImageModal({ imageUrl, onClose, albumTitle }: ImageModalProps) {
   const [imageError, setImageError] = useState(false)
   const [imageLoading, setImageLoading] = useState(true)
 
   // Debug logging
   useEffect(() => {
-    if (isOpen) {
-      console.log("ImageModal opened with:", { imageUrl, alt, title })
-      setImageError(false)
-      setImageLoading(true)
-    }
-  }, [isOpen, imageUrl, alt, title])
+    console.log("ImageModal opened with:", { imageUrl, albumTitle })
+    setImageError(false)
+    setImageLoading(true)
+  }, [imageUrl, albumTitle])
 
   // Handle escape key press
   useEffect(() => {
@@ -35,21 +31,19 @@ export function ImageModal({ isOpen, onClose, imageUrl, alt, title }: ImageModal
       }
     }
 
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscape)
-      // Prevent body scroll when modal is open
-      document.body.style.overflow = "hidden"
-    }
+    document.addEventListener("keydown", handleEscape)
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = "hidden"
 
     return () => {
       document.removeEventListener("keydown", handleEscape)
       document.body.style.overflow = "unset"
     }
-  }, [isOpen, onClose])
+  }, [onClose])
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {imageUrl && (
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
@@ -106,7 +100,7 @@ export function ImageModal({ isOpen, onClose, imageUrl, alt, title }: ImageModal
                     {/* Test with regular img tag first */}
                     <img
                       src={imageUrl}
-                      alt={alt}
+                      alt={albumTitle || "Gallery image"}
                       className="max-w-full max-h-full object-contain"
                       onError={(e) => {
                         console.error("Image failed to load:", imageUrl, e)

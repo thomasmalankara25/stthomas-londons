@@ -47,7 +47,7 @@ export default function EventsPage() {
           {/* People silhouette overlay */}
           <div className="absolute right-0 bottom-0 h-full w-full opacity-5">
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2-21916_white-people-png-white-silhouette-of-people-png-usxdGbNKlbW2UJaZ703DtxcFzv7K2Z.png"
+              src="https://www.pngmart.com/files/7/Abstract-Lines-PNG-Pic.png"
               alt=""
               fill
               className="object-cover object-center"

@@ -24,6 +24,7 @@ const navigationItems: NavigationItem[] = [
   { href: "/community", label: "COMMUNITY", description: "Join our community" },
   { href: "/events", label: "EVENTS", description: "Upcoming events" },
   { href: "/news", label: "NEWS", description: "Latest updates" },
+  { href: "/gallery", label: "GALLERY", description: "Photo Gallery" },
 ]
 
 export function Navigation() {

@@ -199,6 +199,15 @@ export default function AdminPanel() {
                   Membership
                 </Button>
               </Link>
+              <Link href="/admin/albums">
+                <Button
+                  variant="outline"
+                  className="text-[#8B6F47] border-[#8B6F47] hover:bg-[#8B6F47] hover:text-white bg-transparent"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Album
+                </Button>
+              </Link>
               <Link href="/">
                 <Button
                   variant="outline"

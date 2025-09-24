@@ -137,6 +137,7 @@ export function MobileMenu() {
                   { href: "/community", label: "COMMUNITY" },
                   { href: "/events", label: "EVENTS" },
                   { href: "/news", label: "NEWS" },
+                  { href: "/gallery", label: "GALLERY" },
                 ].map((item, index) => (
                   <motion.div key={item.href} variants={mobileMenuItemVariants} custom={index}>
                     <Link
