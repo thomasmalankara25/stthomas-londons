@@ -241,14 +241,12 @@ export default function EventDetailPage() {
         </motion.div>
       </div>
 
-      {/* Image Modal - Only render when event is loaded */}
-      {event && (
+      {/* Image Modal - Only render when modal is open */}
+      {isImageModalOpen && event && (
         <ImageModal
-          isOpen={isImageModalOpen}
           onClose={() => setIsImageModalOpen(false)}
           imageUrl={event.image_url || "/placeholder.svg?height=700&width=600"}
-          alt={event.title}
-          title={event.title}
+          albumTitle={event.title}
         />
       )}
     </div>
