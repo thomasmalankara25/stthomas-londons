@@ -94,7 +94,7 @@ export default function Home() {
           <div className="absolute inset-0 z-0">
             <video autoPlay muted loop playsInline className="w-full h-full object-cover blur-sm">
               <source
-                src="https://thomasbucket26.s3.us-east-2.amazonaws.com/10628377-uhd_4096_2160_25fps+(online-video-cutter.com).mp4"
+                src="https://thomasbucket26.s3.us-east-2.amazonaws.com/WhatsApp+Video+2025-10-01+at+02.06.42_4ac872b1.mp4"
                 type="video/mp4"
               />
             </video>
@@ -123,7 +123,7 @@ export default function Home() {
           </motion.div>
 
           <div className="container mx-auto px-2 py-2 md:px-4 md:py-4 lg:py-6 relative z-20">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-0">
+            <div className="grid lg:grid-cols-2  lg:gap-22 items-center mb-0">
               {/* Image section */}
               <motion.div
                 className="relative flex justify-center order-1 lg:order-2 lg:justify-end lg:mb-0 hidden md:flex"
@@ -133,16 +133,17 @@ export default function Home() {
               >
                 <motion.div
                   className="relative w-[350px] h-[350px] sm:w-[450px] sm:h-[450px] md:w-[550px] md:h-[550px] lg:w-[650px] lg:h-[650px]"
-                  variants={floatingVariants}
+                  
                   animate="animate"
                 >
                   <div className="relative w-full h-full">
                     <Image
-                      src="/images/jesus-praying-banner.png"
+                      src="https://thomasbucket26.s3.us-east-2.amazonaws.com/image12.png"
                       alt="Jesus Christ in prayer - kneeling in white robes with hands clasped"
                       fill
+                      style={{position: "absolute", height: "100%", width: "100%", left: "11%", top: "5%", right: "0", bottom: "0", objectPosition: "center 25%", color: "transparent"}}
                       className="object-cover object-center"
-                      style={{ objectPosition: "center 25%" }}
+                      
                       priority
                     />
                   </div>
@@ -151,7 +152,7 @@ export default function Home() {
 
               {/* Text content */}
               <motion.div
-                className="space-y-6 md:space-y-8 max-w-lg mx-auto text-center order-2 lg:order-1 px-6 md:px-8 py-8 md:py-12 flex flex-col items-center w-full"
+                className="space-y-6 md:space-y-8 max-w-lg mx-auto md:text-left text-center order-2 lg:order-1 px-6 md:px-8 py-8 md:py-12 flex flex-col md:items-start items-center w-full"
                 variants={slideInLeftVariants}
                 initial="hidden"
                 animate="visible"
@@ -167,7 +168,7 @@ export default function Home() {
                 </motion.div>
 
                 <motion.h1
-                  className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight"
+                  className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl md:w-[130%] font-bold text-white leading-tight"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 1 }}
@@ -176,7 +177,7 @@ export default function Home() {
                 </motion.h1>
 
                 <motion.p
-                  className="text-gray-100 text-base md:text-lg leading-relaxed"
+                  className="text-gray-100 text-base md:width-[110%]md:text-lg leading-relaxed"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 1.2 }}
