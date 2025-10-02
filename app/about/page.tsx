@@ -115,7 +115,115 @@ export default function About() {
             </div>
           </div>
         </section>
+        <section className="py-16 bg-gradient-to-br from-[#12100e] via-[#1a1410] to-[#12100e] relative overflow-hidden">
+          {/* Background Effects */}
+          <div className="absolute inset-0 bg-[url('/images/pattern-background.png')] opacity-10"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-[#A67C52]/20 via-transparent to-[#A67C52]/10"></div>
+          
+          <div className="container mx-auto px-4 md:px-8 relative z-10">
+            <div className="text-center mb-12">
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="w-12 h-px bg-gradient-to-r from-transparent to-[#A67C52]/60"></div>
+                <span className="text-white/90 text-sm font-medium tracking-wide">Our Leadership</span>
+                <div className="w-12 h-px bg-gradient-to-l from-transparent to-[#A67C52]/60"></div>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-6">
+                Faith Rooted in Tradition, Hope Focused on Eternity
+              </h2>
+              <p className="text-white/80 text-lg max-w-3xl mx-auto leading-relaxed">
+                Guided by our spiritual leaders who embody the rich traditions and eternal hope of our faith.
+              </p>
+            </div>
 
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Pope Leo XIV */}
+              <div className="group relative">
+                {/* Glass card */}
+                <div className="relative backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 text-center shadow-2xl hover:bg-white/15 transition-all duration-500 hover:scale-105 hover:shadow-3xl">
+                  {/* Glass shine effect */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#A67C52]/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden ring-4 ring-[#A67C52]/30 ring-offset-4 ring-offset-transparent">
+                    <Image
+                      src="https://thomasbucket26.s3.us-east-2.amazonaws.com/uploads/WhatsApp_Image_2025-10-02_at_09.27.34_9bc8febc-removebg-preview.png"
+                      alt="Holy Father Pope Leo XIV"
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    {/* Image glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#A67C52]/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  </div>
+                  
+                  <div className="relative z-10">
+                    <h3 className="text-xl font-semibold mb-2 text-white">HOLY FATHER POPE LEO XIV</h3>
+                    <p className="text-[#A67C52] font-medium mb-4">Supreme Pontiff, Catholic Church</p>
+                    <p className="text-white/80 leading-relaxed text-sm">
+                      The Syro Malankara Catholic Church proudly stands in profound communion with the Universal Catholic Church. 
+                      Guided by the spiritual leadership and teachings of the Holy Father, we cherish and uphold our shared faith, 
+                      recognizing him as the shepherd of our global Catholic community.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bishop Mar Stephanos */}
+              <div className="group relative">
+                {/* Glass card */}
+                <div className="relative backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 text-center shadow-2xl hover:bg-white/15 transition-all duration-500 hover:scale-105 hover:shadow-3xl">
+                  {/* Glass shine effect */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#A67C52]/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden ring-4 ring-[#A67C52]/30 ring-offset-4 ring-offset-transparent">
+                    <Image
+                      src="https://thomasbucket26.s3.us-east-2.amazonaws.com/uploads/WhatsApp_Image_2025-10-02_at_09.27.34_1e386532-removebg-preview.png"
+                      alt="His Excellency Most Rev. Dr. Philipos Mar Stephanos"
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    {/* Image glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#A67C52]/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  </div>
+                  
+                  <div className="relative z-10">
+                    <h3 className="text-xl font-semibold mb-2 text-white">HIS EXCELLENCY MOST REV. DR. PHILIPOS MAR STEPHANOS</h3>
+                    <p className="text-[#A67C52] font-medium mb-4">Bishop of the Eparchy of St Mary, Queen of Peace, USA & Canada</p>
+                    <p className="text-white/80 leading-relaxed text-sm">
+                    His Excellency Most Rev. Dr. Philipos Mar Stephanos, Bishop of the Syro-Malankara Catholic Eparchy of the U.S. and Canada since 2017, shepherds the faithful with humility and care, dedicated to youth, families, and building a vibrant Malankara Catholic community.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cardinal Baselios Cleemis Catholicos */}
+              <div className="group relative">
+                {/* Glass card */}
+                <div className="relative backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 text-center shadow-2xl hover:bg-white/15 transition-all duration-500 hover:scale-105 hover:shadow-3xl">
+                  {/* Glass shine effect */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#A67C52]/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden ring-4 ring-[#A67C52]/30 ring-offset-4 ring-offset-transparent">
+                    <Image
+                      src="https://thomasbucket26.s3.us-east-2.amazonaws.com/uploads/WhatsApp_Image_2025-10-02_at_09.27.34_3468ed99-removebg-preview.png"
+                      alt="His Beatitude Baselios Cardinal Cleemis Catholicos"
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    {/* Image glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#A67C52]/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  </div>
+                  
+                  <div className="relative z-10">
+                    <h3 className="text-xl font-semibold mb-2 text-white">HIS BEATITUDE BASELIOS CARDINAL CLEEMIS CATHOLICOS</h3>
+                    <p className="text-[#A67C52] font-medium mb-4">Major Archbishop-Catholicos</p>
+                    <p className="text-white/80 leading-relaxed text-sm">
+                    Cardinal Baselios Cleemis Catholicos, Major Archbishop of the Syro-Malankara Catholic Church since 2007 and a Cardinal since 2012, leads with deep faith, unity, and tradition, fostering communion with the Holy See, ecumenical dialogue, and pastoral care.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
         {/* Mission & Values Section */}
         <section className="py-16 bg-[#F5F1EB]">
           <div className="container mx-auto px-4 md:px-8">
@@ -182,7 +290,11 @@ export default function About() {
           </div>
                  
         </section>
-          <section className="py-16 bg-gray-900 text-center relative overflow-hidden">
+
+        {/* Leadership Section */}
+    
+
+        <section className="py-16 bg-gray-900 text-center relative overflow-hidden">
           <div className="absolute inset-0">
             <video autoPlay muted loop playsInline className="w-full h-full object-cover opacity-40 blur-sm">
               <source
