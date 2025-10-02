@@ -21,6 +21,12 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/images/malankara-logo.png" type="image/png" />
+        <link rel="shortcut icon" href="/images/malankara-logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/images/malankara-logo.png" />
+        <meta name="theme-color" content="#A67C52" />
+      </head>
       <body className={inter.className}>
         <ScrollToTop />
         <div className="min-h-screen flex flex-col">
