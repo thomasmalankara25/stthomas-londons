@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Calendar, Phone, Users, Eye, Check, X, User, MapPin, Clock } from "lucide-react"
+import { Calendar, Phone, Users, Eye, Check, X, User, MapPin, Clock, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -80,6 +80,89 @@ export default function MembershipRegistrationsPage() {
     return size
   }
 
+  const exportToExcel = () => {
+    // Create CSV content
+    const headers = [
+      "ID",
+      "Registration Date",
+      "Status",
+      "Primary Member Name",
+      "Email",
+      "Contact Number",
+      "Home Address",
+      "Date of Birth",
+      "Date of Baptism",
+      "Date of Confirmation",
+      "Date of Marriage",
+      "Spouse Name",
+      "Spouse Email",
+      "Spouse Contact",
+      "Spouse DOB",
+      "Spouse Baptism",
+      "Spouse Confirmation",
+      "Additional Members Count",
+      "Additional Members Details",
+      "Family Size",
+      "Notes"
+    ]
+
+    const rows = registrations.map((reg) => {
+      const additionalMembersDetails = reg.additional_members && reg.additional_members.length > 0
+        ? reg.additional_members.map((m: any) => 
+            `${m.name} (DOB: ${m.dateOfBirth || 'N/A'}, Baptism: ${m.dateOfBaptism || 'N/A'}, Confirmation: ${m.dateOfConfirmation || 'N/A'})`
+          ).join("; ")
+        : "None"
+
+      return [
+        reg.id,
+        formatDate(reg.created_at),
+        reg.registration_status,
+        reg.primary_member_name,
+        reg.email,
+        reg.contact_number,
+        reg.home_address || "N/A",
+        reg.date_of_birth || "N/A",
+        reg.date_of_baptism || "N/A",
+        reg.date_of_confirmation || "N/A",
+        reg.date_of_marriage || "N/A",
+        reg.spouse_name || "N/A",
+        reg.spouse_email || "N/A",
+        reg.spouse_contact_number || "N/A",
+        reg.spouse_date_of_birth || "N/A",
+        reg.spouse_date_of_baptism || "N/A",
+        reg.spouse_date_of_confirmation || "N/A",
+        reg.additional_members?.length || 0,
+        additionalMembersDetails,
+        getFamilySize(reg),
+        reg.notes || "N/A"
+      ].map(field => {
+        // Escape fields containing commas, quotes, or newlines
+        const stringField = String(field)
+        if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+          return `"${stringField.replace(/"/g, '""')}"`
+        }
+        return stringField
+      })
+    })
+
+    // Combine headers and rows
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n')
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    link.setAttribute('href', url)
+    link.setAttribute('download', `membership_registrations_${new Date().toISOString().split('T')[0]}.csv`)
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   if (isLoading) {
     return (
       <AdminAuthGuard>
@@ -108,7 +191,15 @@ export default function MembershipRegistrationsPage() {
                 <h1 className="text-2xl font-bold text-gray-800">Membership Registrations</h1>
                 <p className="text-gray-600">Manage church membership applications</p>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={exportToExcel}
+                  className="bg-[#A67C52] hover:bg-[#8B6F47] text-white"
+                  disabled={registrations.length === 0}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Export to Excel
+                </Button>
                 <Button
                   onClick={loadRegistrations}
                   variant="outline"
