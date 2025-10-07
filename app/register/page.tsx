@@ -8,7 +8,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, Plus, Trash2 } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { ArrowLeft, Plus, Trash2, CheckCircle2 } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 
@@ -22,6 +31,7 @@ interface MemberData {
 export default function RegisterPage() {
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
 
   const [formData, setFormData] = useState({
     email: "",
@@ -96,12 +106,8 @@ export default function RegisterPage() {
 
       const result = await response.json()
 
-      toast({
-        title: "Registration Request Submitted Successfully!",
-        description:
-          "Your membership registration request has been received. We will review your application and contact you soon.",
-        duration: 5000,
-      })
+      // Show success dialog
+      setShowSuccessDialog(true)
 
       // Reset form
       setFormData({
@@ -478,6 +484,34 @@ export default function RegisterPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Success Confirmation Dialog */}
+      <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <CheckCircle2 className="w-10 h-10 text-green-600" />
+              </div>
+            </div>
+            <AlertDialogTitle className="text-center text-2xl">
+              Registration Successful!
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-base">
+              You have successfully registered. Your membership registration request has been received. 
+              We will review your application and contact you soon.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="sm:justify-center">
+            <AlertDialogAction 
+              className="bg-[#A67C52] hover:bg-[#8B6F47] text-white px-8"
+              onClick={() => setShowSuccessDialog(false)}
+            >
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
