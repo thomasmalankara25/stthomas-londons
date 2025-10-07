@@ -13,7 +13,7 @@ import type { Event } from "@/lib/supabase"
 
 export default function EventRegistration({ params }: { params: { id: string } }) {
   const [event, setEvent] = useState<Event | null>(null)
-  const [formData, setFormData] = useState<Record<string, string>>({})
+  const [formData, setFormData] = useState<Record<string, string | string[]>>({})
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -40,11 +40,22 @@ export default function EventRegistration({ params }: { params: { id: string } }
     }
   }
 
-  const handleInputChange = (fieldId: string, value: string) => {
+  const handleInputChange = (fieldId: string, value: string | string[]) => {
     setFormData((prev) => ({
       ...prev,
       [fieldId]: value,
     }))
+  }
+
+  const handleCheckboxChange = (fieldId: string, option: string, checked: boolean) => {
+    setFormData((prev) => {
+      const currentValues = (prev[fieldId] as string[]) || []
+      if (checked) {
+        return { ...prev, [fieldId]: [...currentValues, option] }
+      } else {
+        return { ...prev, [fieldId]: currentValues.filter((v) => v !== option) }
+      }
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,7 +67,13 @@ export default function EventRegistration({ params }: { params: { id: string } }
     try {
       // Validate required fields
       const requiredFields = event.registration_form.fields.filter((field) => field.required)
-      const missingFields = requiredFields.filter((field) => !formData[field.id]?.trim())
+      const missingFields = requiredFields.filter((field) => {
+        const value = formData[field.id]
+        if (Array.isArray(value)) {
+          return value.length === 0
+        }
+        return !value || (typeof value === 'string' && !value.trim())
+      })
 
       if (missingFields.length > 0) {
         alert(`Please fill in all required fields: ${missingFields.map((f) => f.label).join(", ")}`)
@@ -233,18 +250,58 @@ export default function EventRegistration({ params }: { params: { id: string } }
                   <form onSubmit={handleSubmit} className="space-y-4">
                     {event.registration_form.fields.map((field) => (
                       <div key={field.id}>
-                        <label className="text-sm font-medium text-gray-700 mb-1 block">
+                        <label className="text-sm font-medium text-gray-700 mb-2 block">
                           {field.label}
                           {field.required && <span className="text-red-500 ml-1">*</span>}
                         </label>
-                        <input
-                          type={field.type}
-                          value={formData[field.id] || ""}
-                          onChange={(e) => handleInputChange(field.id, e.target.value)}
-                          placeholder={field.placeholder}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A67C52] focus:border-transparent"
-                          required={field.required}
-                        />
+                        
+                        {field.type === "radio" ? (
+                          <div className="space-y-2">
+                            {(field.options || []).map((option, optIdx) => (
+                              <div key={optIdx} className="flex items-center gap-2">
+                                <input
+                                  type="radio"
+                                  id={`${field.id}_${optIdx}`}
+                                  name={field.id}
+                                  value={option}
+                                  checked={formData[field.id] === option}
+                                  onChange={(e) => handleInputChange(field.id, e.target.value)}
+                                  className="w-4 h-4 text-[#A67C52] focus:ring-[#A67C52]"
+                                  required={field.required}
+                                />
+                                <label htmlFor={`${field.id}_${optIdx}`} className="text-sm text-gray-700 cursor-pointer">
+                                  {option}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        ) : field.type === "multiselect" ? (
+                          <div className="space-y-2">
+                            {(field.options || []).map((option, optIdx) => (
+                              <div key={optIdx} className="flex items-center gap-2">
+                                <input
+                                  type="checkbox"
+                                  id={`${field.id}_${optIdx}`}
+                                  checked={((formData[field.id] as string[]) || []).includes(option)}
+                                  onChange={(e) => handleCheckboxChange(field.id, option, e.target.checked)}
+                                  className="w-4 h-4 text-[#A67C52] focus:ring-[#A67C52] rounded"
+                                />
+                                <label htmlFor={`${field.id}_${optIdx}`} className="text-sm text-gray-700 cursor-pointer">
+                                  {option}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <input
+                            type={field.type}
+                            value={(formData[field.id] as string) || ""}
+                            onChange={(e) => handleInputChange(field.id, e.target.value)}
+                            placeholder={field.placeholder}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A67C52] focus:border-transparent"
+                            required={field.required}
+                          />
+                        )}
                       </div>
                     ))}
 

@@ -75,10 +75,11 @@ export interface AdditionalMember {
 
 export interface FormField {
   id: string
-  type: "text" | "email" | "tel" | "number"
+  type: "text" | "email" | "tel" | "number" | "date" | "radio" | "multiselect"
   label: string
   required: boolean
   placeholder: string
+  options?: string[] // For radio and multiselect fields
 }
 
 export interface MembershipRegistration {

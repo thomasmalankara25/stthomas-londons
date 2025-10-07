@@ -92,6 +92,7 @@ export default function AddEvent() {
       label: "",
       required: false,
       placeholder: "",
+      options: [],
     }
     setCustomFields([...customFields, newField])
   }
@@ -456,9 +457,15 @@ export default function AddEvent() {
                                 <label className="text-xs text-gray-600 mb-1 block">Field Type</label>
                                 <select
                                   value={field.type}
-                                  onChange={(e) =>
-                                    updateCustomField(index, { type: e.target.value as FormField["type"] })
-                                  }
+                                  onChange={(e) => {
+                                    const newType = e.target.value as FormField["type"]
+                                    const updates: Partial<FormField> = { type: newType }
+                                    // Initialize options array for radio and multiselect
+                                    if ((newType === "radio" || newType === "multiselect") && !field.options) {
+                                      updates.options = ["Option 1", "Option 2"]
+                                    }
+                                    updateCustomField(index, updates)
+                                  }}
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#A67C52]"
                                 >
                                   <option value="text">Text</option>
@@ -466,20 +473,74 @@ export default function AddEvent() {
                                   <option value="tel">Phone</option>
                                   <option value="date">Date</option>
                                   <option value="number">Number</option>
+                                  <option value="radio">Radio Button</option>
+                                  <option value="multiselect">Multi-Select</option>
                                 </select>
                               </div>
                             </div>
 
-                            <div>
-                              <label className="text-xs text-gray-600 mb-1 block">Placeholder</label>
-                              <input
-                                type="text"
-                                value={field.placeholder}
-                                onChange={(e) => updateCustomField(index, { placeholder: e.target.value })}
-                                placeholder="Enter placeholder text"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#A67C52]"
-                              />
-                            </div>
+                            {/* Show placeholder only for text-based inputs */}
+                            {!["radio", "multiselect"].includes(field.type) && (
+                              <div>
+                                <label className="text-xs text-gray-600 mb-1 block">Placeholder</label>
+                                <input
+                                  type="text"
+                                  value={field.placeholder}
+                                  onChange={(e) => updateCustomField(index, { placeholder: e.target.value })}
+                                  placeholder="Enter placeholder text"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#A67C52]"
+                                />
+                              </div>
+                            )}
+
+                            {/* Options management for radio and multiselect */}
+                            {(field.type === "radio" || field.type === "multiselect") && (
+                              <div>
+                                <label className="text-xs text-gray-600 mb-2 block">Options</label>
+                                <div className="space-y-2">
+                                  {(field.options || []).map((option, optionIndex) => (
+                                    <div key={optionIndex} className="flex gap-2">
+                                      <input
+                                        type="text"
+                                        value={option}
+                                        onChange={(e) => {
+                                          const newOptions = [...(field.options || [])]
+                                          newOptions[optionIndex] = e.target.value
+                                          updateCustomField(index, { options: newOptions })
+                                        }}
+                                        placeholder={`Option ${optionIndex + 1}`}
+                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#A67C52]"
+                                      />
+                                      <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => {
+                                          const newOptions = (field.options || []).filter((_, i) => i !== optionIndex)
+                                          updateCustomField(index, { options: newOptions })
+                                        }}
+                                        className="text-red-600 hover:text-red-700"
+                                      >
+                                        <X className="w-4 h-4" />
+                                      </Button>
+                                    </div>
+                                  ))}
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                      const newOptions = [...(field.options || []), `Option ${(field.options?.length || 0) + 1}`]
+                                      updateCustomField(index, { options: newOptions })
+                                    }}
+                                    className="w-full text-[#A67C52] border-[#A67C52] hover:bg-[#A67C52] hover:text-white"
+                                  >
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Add Option
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
 
                             <div className="flex items-center gap-2">
                               <Switch
@@ -492,12 +553,47 @@ export default function AddEvent() {
                             {/* Preview */}
                             <div className="pt-2 border-t border-gray-200">
                               <label className="text-xs text-gray-500 mb-1 block">Preview:</label>
-                              <input
-                                type={field.type}
-                                placeholder={field.placeholder || field.label}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                                disabled
-                              />
+                              {field.type === "radio" ? (
+                                <div className="space-y-2">
+                                  {(field.options || []).map((option, optIdx) => (
+                                    <div key={optIdx} className="flex items-center gap-2">
+                                      <input
+                                        type="radio"
+                                        name={`preview_${field.id}`}
+                                        id={`preview_${field.id}_${optIdx}`}
+                                        disabled
+                                        className="w-4 h-4 text-[#A67C52]"
+                                      />
+                                      <label htmlFor={`preview_${field.id}_${optIdx}`} className="text-sm text-gray-700">
+                                        {option}
+                                      </label>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : field.type === "multiselect" ? (
+                                <div className="space-y-2">
+                                  {(field.options || []).map((option, optIdx) => (
+                                    <div key={optIdx} className="flex items-center gap-2">
+                                      <input
+                                        type="checkbox"
+                                        id={`preview_${field.id}_${optIdx}`}
+                                        disabled
+                                        className="w-4 h-4 text-[#A67C52] rounded"
+                                      />
+                                      <label htmlFor={`preview_${field.id}_${optIdx}`} className="text-sm text-gray-700">
+                                        {option}
+                                      </label>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <input
+                                  type={field.type}
+                                  placeholder={field.placeholder || field.label}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                                  disabled
+                                />
+                              )}
                             </div>
                           </div>
                         ))}
@@ -511,16 +607,51 @@ export default function AddEvent() {
                         <h5 className="font-medium text-gray-800">Event Registration</h5>
                         {[...formFields, ...customFields].map((field) => (
                           <div key={field.id}>
-                            <label className="text-sm font-medium text-gray-700 mb-1 block">
+                            <label className="text-sm font-medium text-gray-700 mb-2 block">
                               {field.label}
                               {field.required && <span className="text-red-500 ml-1">*</span>}
                             </label>
-                            <input
-                              type={field.type}
-                              placeholder={field.placeholder}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                              disabled
-                            />
+                            {field.type === "radio" ? (
+                              <div className="space-y-2">
+                                {(field.options || []).map((option, optIdx) => (
+                                  <div key={optIdx} className="flex items-center gap-2">
+                                    <input
+                                      type="radio"
+                                      name={`form_preview_${field.id}`}
+                                      id={`form_preview_${field.id}_${optIdx}`}
+                                      disabled
+                                      className="w-4 h-4 text-[#A67C52]"
+                                    />
+                                    <label htmlFor={`form_preview_${field.id}_${optIdx}`} className="text-sm text-gray-700">
+                                      {option}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : field.type === "multiselect" ? (
+                              <div className="space-y-2">
+                                {(field.options || []).map((option, optIdx) => (
+                                  <div key={optIdx} className="flex items-center gap-2">
+                                    <input
+                                      type="checkbox"
+                                      id={`form_preview_${field.id}_${optIdx}`}
+                                      disabled
+                                      className="w-4 h-4 text-[#A67C52] rounded"
+                                    />
+                                    <label htmlFor={`form_preview_${field.id}_${optIdx}`} className="text-sm text-gray-700">
+                                      {option}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <input
+                                type={field.type}
+                                placeholder={field.placeholder}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                                disabled
+                              />
+                            )}
                           </div>
                         ))}
                         <Button disabled className="bg-[#A67C52] text-white">
