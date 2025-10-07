@@ -12,6 +12,7 @@ import { AdminAuthGuard } from "@/components/admin-auth-guard"
 import { newsService } from "@/lib/api/news"
 import { eventsService } from "@/lib/api/events"
 import { massService } from "@/lib/api/mass"
+import { membershipService } from "@/lib/api/membership"
 import { authService } from "@/lib/auth"
 import type { News, Event, MassSettings } from "@/lib/supabase"
 
@@ -21,7 +22,7 @@ export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState("overview")
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
-  const [totalRegistrations, setTotalRegistrations] = useState(0)
+  const [totalMemberships, setTotalMemberships] = useState(0)
   
   // Mass settings state
   const [massSettings, setMassSettings] = useState<MassSettings>({
@@ -65,13 +66,13 @@ export default function AdminPanel() {
         setMassSettings(massData)
       }
 
-      // Load total registrations count with better error handling
+      // Load total membership registrations count with better error handling
       try {
-        const allRegistrations = await eventsService.getAllRegistrations()
-        setTotalRegistrations(allRegistrations.length)
+        const allMemberships = await membershipService.getAll()
+        setTotalMemberships(allMemberships.length)
       } catch (error) {
-        console.error("Error loading registrations count:", error)
-        setTotalRegistrations(0)
+        console.error("Error loading membership count:", error)
+        setTotalMemberships(0)
       }
     } catch (error) {
       console.error("Error loading data:", error)
@@ -286,12 +287,12 @@ export default function AdminPanel() {
 
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Registrations</CardTitle>
+                    <CardTitle className="text-sm font-medium">Memberships</CardTitle>
                     <Users className="h-4 w-4 text-[#A67C52]" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{totalRegistrations}</div>
-                    <p className="text-xs text-muted-foreground">Total event registrations</p>
+                    <div className="text-2xl font-bold">{totalMemberships}</div>
+                    <p className="text-xs text-muted-foreground">Total membership registrations</p>
                   </CardContent>
                 </Card>
 
