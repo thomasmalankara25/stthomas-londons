@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Calendar, User, Facebook, Twitter, Mail } from "lucide-react"
+import { ArrowLeft, Calendar, User, Facebook, X, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MobileMenu } from "@/components/mobile-menu"
 import { newsService } from "@/lib/api/news"
@@ -61,7 +61,7 @@ export default function NewsArticle({ params }: { params: { id: string } }) {
       case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
         break
-      case "twitter":
+      case "X":
         shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`
         break
       case "email":
@@ -219,10 +219,10 @@ export default function NewsArticle({ params }: { params: { id: string } }) {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => shareArticle("twitter")}
+                      onClick={() => shareArticle("X")}
                       className="text-blue-400 border-blue-400 hover:bg-blue-400 hover:text-white"
                     >
-                      <Twitter className="w-4 h-4" />
+                      <X className="w-4 h-4" />
                     </Button>
                     <Button
                       variant="outline"
@@ -278,11 +278,11 @@ export default function NewsArticle({ params }: { params: { id: string } }) {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => shareArticle("twitter")}
-                        className="text-blue-400 hover:bg-blue-50"
+                        onClick={() => shareArticle("X")}
+                        className="text-blue-400 hover:bg-black"
                       >
-                        <Twitter className="w-4 h-4 mr-2" />
-                        Twitter
+                        <X className="w-4 h-4 mr-2" />
+                        X
                       </Button>
                     </div>
                   </div>
