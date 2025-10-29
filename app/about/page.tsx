@@ -175,7 +175,7 @@ export default function About() {
                   
                   <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden ring-4 ring-[#A67C52]/30 ring-offset-4 ring-offset-transparent">
                     <Image
-                      src="https://thomasbucket26.s3.us-east-2.amazonaws.com/uploads/WhatsApp_Image_2025-10-02_at_09.27.34_1e386532-removebg-preview.png"
+                      src="https://thomasbucket26.s3.us-east-2.amazonaws.com/uploads/WhatsApp_Image_2025-10-02_at_09.27.34_3468ed99-removebg-preview.png"
                       alt="His Excellency Most Rev. Dr. Philipos Mar Stephanos"
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -203,7 +203,7 @@ export default function About() {
                   
                   <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden ring-4 ring-[#A67C52]/30 ring-offset-4 ring-offset-transparent">
                     <Image
-                      src="https://thomasbucket26.s3.us-east-2.amazonaws.com/uploads/WhatsApp_Image_2025-10-02_at_09.27.34_3468ed99-removebg-preview.png"
+                      src="https://thomasbucket26.s3.us-east-2.amazonaws.com/uploads/WhatsApp_Image_2025-10-02_at_09.27.34_1e386532-removebg-preview.png"
                       alt="His Beatitude Baselios Cardinal Cleemis Catholicos"
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
