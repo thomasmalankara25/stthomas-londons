@@ -9,23 +9,44 @@ export function cn(...inputs: ClassValue[]) {
  * Convert a date string to local date string without timezone issues
  * This ensures the date displayed matches what was stored in the database
  */
+// export function formatDateToLocal(dateString: string): string {
+//   if (!dateString) return ''
+  
+//   try {
+//     // Create a date object from the string
+//     const date = new Date(dateString)
+    
+//     // Check if the date is valid
+//     if (isNaN(date.getTime())) {
+//       return dateString
+//     }
+    
+//     // Format as YYYY-MM-DD in local timezone
+//     const year = date.getFullYear()
+//     const month = String(date.getMonth() + 1).padStart(2, '0')
+//     const day = String(date.getDate()).padStart(2, '0')
+    
+//     return `${year}-${month}-${day}`
+//   } catch (error) {
+//     console.error('Error formatting date:', error)
+//     return dateString
+//   }
+// }
 export function formatDateToLocal(dateString: string): string {
   if (!dateString) return ''
-  
+console.log(dateString)
   try {
-    // Create a date object from the string
-    const date = new Date(dateString)
-    
-    // Check if the date is valid
+    // Force parsing in local timezone
+    const date = new Date(`${dateString}T00:00:00`)
+
     if (isNaN(date.getTime())) {
       return dateString
     }
-    
-    // Format as YYYY-MM-DD in local timezone
+
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
-    
+
     return `${year}-${month}-${day}`
   } catch (error) {
     console.error('Error formatting date:', error)
@@ -60,22 +81,44 @@ export function formatDateForDisplay(dateString: string): string {
 /**
  * Ensure a date string is properly formatted for database storage
  */
+// export function normalizeDateForDatabase(dateString: string): string {
+//   if (!dateString) return ''
+  
+//   try {
+//     const date = new Date(dateString)
+    
+//     if (isNaN(date.getTime())) {
+//       return dateString
+//     }
+    
+//     // Return the date in YYYY-MM-DD format
+//     const year = date.getFullYear()
+//     const month = String(date.getMonth() + 1).padStart(2, '0')
+//     const day = String(date.getDate()).padStart(2, '0')
+    
+//     return `${year}-${month}-${day}`
+//   } catch (error) {
+//     console.error('Error normalizing date:', error)
+//     return dateString
+//   }
+// }
 export function normalizeDateForDatabase(dateString: string): string {
   if (!dateString) return ''
-  
+
   try {
+    // If already in YYYY-MM-DD format, return directly
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      return dateString
+    }
+
     const date = new Date(dateString)
-    
+
     if (isNaN(date.getTime())) {
       return dateString
     }
-    
-    // Return the date in YYYY-MM-DD format
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    
-    return `${year}-${month}-${day}`
+
+    // Use toISOString to avoid timezone issues
+    return date.toISOString().split('T')[0]
   } catch (error) {
     console.error('Error normalizing date:', error)
     return dateString

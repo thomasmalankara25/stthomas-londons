@@ -96,7 +96,7 @@ export default function EventRegistration({ params }: { params: { id: string } }
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    return new Date(`${dateString}T00:00:00`).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",

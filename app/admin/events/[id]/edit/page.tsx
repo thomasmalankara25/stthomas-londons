@@ -63,7 +63,7 @@ export default function EditEvent({ params }: { params: { id: string } }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    date: "",
+    date: new Date(),
     time: "",
     location: "",
     category: "",
@@ -92,11 +92,12 @@ export default function EditEvent({ params }: { params: { id: string } }) {
     try {
       setIsLoading(true)
       const eventData = await eventsService.getById(Number.parseInt(params.id))
+      console.log(eventData.date)
       if (eventData) {
         setFormData({
           title: eventData.title,
           description: eventData.description,
-          date: formatDateToLocal(eventData.date),
+          date: eventData.date,
           time: eventData.time,
           location: eventData.location,
           category: eventData.category,
@@ -785,7 +786,7 @@ export default function EditEvent({ params }: { params: { id: string } }) {
                         <div className="flex items-center gap-2">
                           <Calendar className="w-3 h-3 text-[#A67C52]" />
                           <span>
-                            {new Date(formData.date).toLocaleDateString("en-US", {
+                            {new Date(`${formData.date}T00:00:00`).toLocaleDateString("en-US", {
                               year: "numeric",
                               month: "long",
                               day: "numeric",

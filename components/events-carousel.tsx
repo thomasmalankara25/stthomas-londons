@@ -32,7 +32,7 @@ export function EventsCarousel({ events }: EventsCarouselProps) {
   }, [])
 
   const formatEventDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    return new Date(`${dateString}T00:00:00`).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",

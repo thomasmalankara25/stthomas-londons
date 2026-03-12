@@ -816,7 +816,7 @@ export default function AddEvent() {
                         <div className="flex items-center gap-2">
                           <Calendar className="w-3 h-3 text-[#A67C52]" />
                           <span>
-                            {new Date(formData.date).toLocaleDateString("en-US", {
+                            {new Date(`${formData.date}T00:00:00`).toLocaleDateString("en-US", {
                               year: "numeric",
                               month: "long",
                               day: "numeric",
