@@ -483,7 +483,7 @@ export default function Home() {
                   >
                     <div className="relative w-64 h-80 lg:w-72 lg:h-96">
                       <Image
-                        src="/images/rev-fr-jobin-thomas.png"
+                        src="/images/Fr. Soji Mathew.jpeg"
                         alt="Rev. Fr. SOJI MATHEW MURUPPEL - Parish Priest"
                         fill
                         className="object-cover object-center rounded-2xl shadow-lg"
