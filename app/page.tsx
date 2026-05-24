@@ -484,14 +484,14 @@ export default function Home() {
                     <div className="relative w-64 h-80 lg:w-72 lg:h-96">
                       <Image
                         src="/images/rev-fr-jobin-thomas.png"
-                        alt="Rev. Fr. Jobin Thomas - Parish Priest"
+                        alt="Rev. Fr. SOJI MATHEW MURUPPEL - Parish Priest"
                         fill
                         className="object-cover object-center rounded-2xl shadow-lg"
                         style={{ objectPosition: "center top" }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
                       <div className="absolute bottom-4 left-4 right-4 text-white">
-                        <h4 className="font-semibold text-lg">Rev. Fr. Jobin Thomas</h4>
+                        <h4 className="font-semibold text-lg">Rev. Fr. SOJI MATHEW MURUPPEL</h4>
                         <p className="text-sm opacity-90">Parish Priest</p>
                       </div>
                     </div>
